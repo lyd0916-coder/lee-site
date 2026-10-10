@@ -1,0 +1,882 @@
+<title>초선의원 행정사무감사 교본</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 회의록·감사결과보고서 느낌의 단일 본문 + 데스크톱 좌측 목차. 시정(적)·처리(황)·건의(청) 도장 색을 의미색으로 사용 */
+:root{
+  --bg:#f7f8f6; --paper:#ffffff; --ink:#1d2430; --muted:#5b6472; --line:#d9dee3;
+  --accent:#1f4e79; --accent-soft:#e6eef6;
+  --red:#b3261e; --red-soft:#fbeceb; --amber:#8a5a00; --amber-soft:#fbf3e2; --blue:#1f5fa8; --blue-soft:#e8f0fa;
+  --green:#2e6b3f; --green-soft:#e9f3ec;
+  --display:"Nanum Myeongjo","Noto Serif KR","AppleMyungjo",serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161c; --paper:#1a2029; --ink:#e7eaee; --muted:#a3acb8; --line:#2f3845;
+  --accent:#8bb8e8; --accent-soft:#1f2c3b;
+  --red:#f08a82; --red-soft:#3a1f1e; --amber:#e6b450; --amber-soft:#352a14; --blue:#8ab4f0; --blue-soft:#1c2a3d;
+  --green:#86c99a; --green-soft:#1b2e22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161c; --paper:#1a2029; --ink:#e7eaee; --muted:#a3acb8; --line:#2f3845;
+  --accent:#8bb8e8; --accent-soft:#1f2c3b;
+  --red:#f08a82; --red-soft:#3a1f1e; --amber:#e6b450; --amber-soft:#352a14; --blue:#8ab4f0; --blue-soft:#1c2a3d;
+  --green:#86c99a; --green-soft:#1b2e22; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75;padding-inline:16px;padding-block:0 64px;word-break:keep-all;overflow-wrap:anywhere}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto;padding-block:32px 16px;font-size:14px}
+nav.toc b{display:block;font-size:12px;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:4px 8px;border-radius:6px}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+@media (max-width:900px){nav.toc{position:static;max-height:none;border-bottom:1px solid var(--line);padding-block:16px}
+  nav.toc ol{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+main{min-width:0;padding-block:32px 0}
+article{max-width:760px}
+header.cover{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:32px}
+.eyebrow{font-size:13px;letter-spacing:.08em;color:var(--accent);font-weight:600}
+h1{font-family:var(--display);font-size:clamp(28px,5vw,40px);line-height:1.3;margin:8px 0 12px;text-wrap:balance}
+h2{font-family:var(--display);font-size:clamp(22px,3.4vw,28px);line-height:1.35;margin:56px 0 16px;padding-top:16px;border-top:1px solid var(--line);text-wrap:balance;scroll-margin-top:16px}
+h3{font-size:19px;line-height:1.45;margin:32px 0 10px;text-wrap:balance}
+h4{font-size:16px;margin:20px 0 6px}
+p{margin:0 0 14px}
+.lead{font-size:18px;color:var(--muted)}
+.meta{font-size:14px;color:var(--muted)}
+a{color:var(--accent)}
+ul,ol{padding-left:22px;margin:0 0 14px}
+li{margin-bottom:6px}
+strong{font-weight:700}
+.note{background:var(--accent-soft);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:15px}
+.warn{background:var(--amber-soft);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:15px}
+.warn b,.note b{display:block;margin-bottom:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+.grid>div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.grid>div h4{margin-top:0}
+.k{font-size:13px;color:var(--muted);display:block}
+.tbl{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th,td{border-bottom:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.stamp{display:inline-block;font-weight:700;font-size:13px;padding:1px 8px;border:1.5px solid currentColor;border-radius:4px;line-height:1.6;white-space:nowrap}
+.s-red{color:var(--red);background:var(--red-soft)} .s-amber{color:var(--amber);background:var(--amber-soft)} .s-blue{color:var(--blue);background:var(--blue-soft)} .s-green{color:var(--green);background:var(--green-soft)}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.three>div{border-radius:10px;padding:14px 16px;min-width:0}
+.three .r{background:var(--red-soft)} .three .a{background:var(--amber-soft)} .three .b{background:var(--blue-soft)}
+.three h4{margin:0 0 6px}
+.steps{list-style:none;padding:0;counter-reset:s;display:grid;gap:10px}
+.steps>li{counter-increment:s;display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:start;margin:0}
+.steps>li::before{content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--paper);font-weight:700;font-size:14px}
+.script{background:var(--paper);border:1px solid var(--line);border-radius:12px;margin:22px 0;overflow:hidden}
+.script>.hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline}
+.script>.hd h3{margin:0;font-size:18px}
+.script>.bd{padding:6px 18px 16px}
+.script h4{font-size:14px;letter-spacing:.04em;color:var(--accent);margin:16px 0 6px}
+.req{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font-size:14.5px}
+.req ol{margin:4px 0 0}
+.dlg{display:grid;gap:6px;font-size:15px}
+.dlg p{margin:0;display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px}
+.dlg .who{font-weight:700;color:var(--muted);font-size:13.5px;padding-top:2px}
+.dlg .me .who{color:var(--accent)}
+.dlg .tip{display:block;background:var(--green-soft);border-radius:8px;padding:8px 12px;font-size:14px;color:var(--ink)}
+.result{font-size:14.5px;border-left:3px solid var(--red);padding:6px 12px;background:var(--red-soft);border-radius:0 8px 8px 0}
+.result.am{border-color:var(--amber);background:var(--amber-soft)}
+.result.bl{border-color:var(--blue);background:var(--blue-soft)}
+dl.gloss{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin:16px 0;border:1px solid var(--line);border-radius:10px;background:var(--paper);overflow:hidden}
+dl.gloss>div{display:grid;grid-template-columns:180px minmax(0,1fr);gap:14px;padding:11px 16px;border-bottom:1px solid var(--line)}
+dl.gloss>div:last-child{border-bottom:0}
+@media (max-width:560px){dl.gloss>div{grid-template-columns:minmax(0,1fr);gap:2px}}
+dt{font-weight:700}
+dd{margin:0;font-size:15px}
+dd em{font-style:normal;color:var(--muted);font-size:14px;display:block;margin-top:2px}
+.check{list-style:none;padding:0}
+.check li{display:flex;gap:10px;align-items:flex-start}
+.check input{margin-top:6px;width:17px;height:17px;flex:none;accent-color:var(--accent)}
+.check label{cursor:pointer}
+.phase{font-weight:700;color:var(--accent);margin-top:22px}
+.do-dont{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.do-dont>div{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="목차">
+  <b>목차</b>
+  <ol>
+    <li><a href="#summary">한 장 요약</a></li>
+    <li><a href="#why">행감이 왜 가장 센 무기인가</a></li>
+    <li><a href="#calendar">행감 1년 달력</a></li>
+    <li><a href="#strategy">7대 전략</a></li>
+    <li><a href="#request">자료요구 잘하는 법</a></li>
+    <li><a href="#finance">재정 기본기</a></li>
+    <li><a href="#points">분야별 점검 포인트</a></li>
+    <li><a href="#scripts">실전 질의 대본 12선</a></li>
+    <li><a href="#skill">질의 기술</a></li>
+    <li><a href="#after">행감 이후</a></li>
+    <li><a href="#dont">절대 하지 말 것</a></li>
+    <li><a href="#gloss">용어 풀이 사전</a></li>
+    <li><a href="#checklist">준비 체크리스트</a></li>
+  </ol>
+</nav>
+
+<main>
+<article>
+<header class="cover">
+  <div class="eyebrow">경기도의회 더불어민주당 · 초선의원 실무 교본</div>
+  <h1>행정사무감사, 이렇게 준비하고 이렇게 묻는다</h1>
+  <p class="lead">박성용 강사(전 서울시의원·서울시의회 교섭단체 대표 역임) 행정사무감사 강의(2026. 9. 17., 녹취 3편, 약 2시간 30분)를 초선의원이 바로 쓸 수 있도록 순서대로 다시 짜고, 어려운 용어는 풀어 쓰고, 실제 질의 대본을 붙였습니다.</p>
+  <p class="meta">읽는 법: 처음이라면 <a href="#summary">한 장 요약</a> → <a href="#strategy">7대 전략</a> → <a href="#scripts">실전 질의 대본</a> 순서로 보세요. 모르는 단어는 <a href="#gloss">용어 풀이 사전</a>에 있습니다.</p>
+  <div class="warn"><b>수치 사용 전 꼭 확인하세요</b>이 교본의 숫자는 강의 녹취(자동 받아쓰기)에서 옮긴 것이라 오탈자가 있을 수 있습니다. 감사장에서 인용할 숫자는 반드시 경기도 결산서·예산서, 행정안전부 <b>지방재정365</b>(lofin365.go.kr), 집행부 제출자료로 다시 확인한 뒤 쓰세요. 속기록은 영구히 남습니다.</div>
+</header>
+
+<!-- ───────── 1 ───────── -->
+<h2 id="summary">한 장 요약: 이것만 기억해도 절반은 한다</h2>
+<ol class="steps">
+  <li><div><strong>행감은 "강제력"이 있는 유일한 자리다.</strong> 상임위에서 "적극 검토하겠습니다"는 담당자가 바뀌면 사라진다. 행감 결과보고서에 <span class="stamp s-red">시정</span> <span class="stamp s-amber">처리</span> 요구로 올라간 것은 담당자가 바뀌어도 다음 해 행감 전까지 반드시 이행해야 한다.</div></li>
+  <li><div><strong>행감은 감사 기간이 아니라 1년 내내 하는 것이다.</strong> 평소 자료요구 → 쌓인 자료 분석 → 행감장에서 "수확". 감사장은 토론하는 곳이 아니라 거둬들이는 곳이다.</div></li>
+  <li><div><strong>서면감사가 절반 이상이다.</strong> 자료요구를 10개 하면 현장에서 2개만 물어도, 집행부는 10개 전부에 대해 문제점과 개선책을 써서 내야 한다. 그 자체가 감사다.</div></li>
+  <li><div><strong>자료는 3년 치, 표로, 원본으로.</strong> 계획서·평가보고서·용역보고서·회의록·설계변경·계약서를 3년 치 받아 비교한다. "도지사에게 보고한 원본 그대로" 받는다.</div></li>
+  <li><div><strong>질문은 데이터로, 육하원칙으로.</strong> "몇 건입니까?"라고 묻고 본인도 답을 모르면 감사가 아니다. 숫자를 먼저 쥐고 들어간다.</div></li>
+  <li><div><strong>선택과 집중.</strong> 이번 행감에서 "이것 하나는 반드시 바꾼다"는 주제를 정한다. 한 부서에 한 주제 이상은 꼭 본다.</div></li>
+  <li><div><strong>결과는 예산과 조례로 마무리한다.</strong> 행감에서 찾은 문제를 바로 이어지는 본예산 심사의 기준으로 쓰고, 제도 문제는 조례 개정으로 고친다.</div></li>
+  <li><div><strong>화내지 않는다.</strong> 발언은 중계되고 속기록은 지울 수 없다. 끓어오르면 나가서 찬물 마시고 들어온다.</div></li>
+</ol>
+
+<!-- ───────── 2 ───────── -->
+<h2 id="why">행감이 왜 가장 센 무기인가</h2>
+<p>지방의원이 하는 일은 자료요구, 조례 발의, 예산·결산 심사, 업무보고, 도정질문(5분 발언), 행정사무감사 등으로 나뉩니다. 강사는 "모든 의정활동은 행정사무감사로 수렴된다"고 정리했습니다. 이유는 하나, <strong>강제력</strong>입니다.</p>
+
+<h3>"적극 검토하겠습니다"가 왜 소용없나</h3>
+<p>과장·국장은 보통 1년~1년 반마다 자리를 옮기는 <strong>순환보직</strong>입니다. 의원이 처음 만났을 때 이미 6개월이 지났고, 곧 다른 자리로 갈 사람입니다. 상임위에서 고개 숙이며 "적극 검토하겠다"고 해도, 그 순간만 넘기면 책임질 사람이 없습니다.</p>
+<p>행정사무감사 결과로 의결된 시정·처리 요구는 다릅니다. <strong>담당 과장이 바뀌든, 국장이 퇴직하든 후임자가 이어받아 다음 해 행감 전까지 이행을 마쳐야 합니다.</strong> 지방자치법은 이 내용을 두 개 조문(제49조 감사·조사권, 제50조 결과 처리)에 걸쳐 따로 정해 둘 만큼 무겁게 다룹니다.</p>
+
+<h3>결과보고서의 세 가지 도장</h3>
+<div class="three">
+  <div class="r"><h4><span class="stamp s-red">시정요구</span></h4><p>법령·조례를 <strong>위반</strong>한 것. "바로잡아라." <br>강제 이행 대상.</p></div>
+  <div class="a"><h4><span class="stamp s-amber">처리요구</span></h4><p>위법까지는 아니지만 <strong>불합리·부당</strong>한 것. "고쳐라." <br>강제 이행 대상.</p></div>
+  <div class="b"><h4><span class="stamp s-blue">건의사항</span></h4><p>"다른 시도는 이렇게 한다, 검토해 봐라." <strong>아이디어 제공</strong> 수준. 강제력은 약함.</p></div>
+</div>
+<div class="note"><b>위법과 불법은 어떻게 다른가</b><strong>위법</strong>은 법을 어긴 것 자체를, <strong>불법</strong>은 법을 어겼을 때 처벌(벌칙) 조항까지 있는 것을 말합니다. 예를 들어 광역의회는 예산안을 회계연도 시작 15일 전(12월 16일)까지 의결해야 합니다(시·군·구는 10일 전). 이 기한을 넘기면 위법이지만, 의장을 처벌하는 조항은 없으므로 불법은 아닙니다. 시정요구는 "위법"이면 충분합니다.</div>
+
+<h3>행감에서 덤으로 얻는 것</h3>
+<ul>
+  <li><strong>지역 민원 해결의 지렛대.</strong> 지역 민원을 행감장에 가져가 시정·처리 사항으로 분류되면 집행부가 강제로 이행해야 합니다. 민원은 가능하면 행감으로 가져가세요.</li>
+  <li><strong>예산 심사의 예습.</strong> 행감은 정책·예산·사업 분야로 나뉘고, 끝나면 곧바로 본예산 심사가 시작됩니다. 행감에서 본 숫자가 그대로 예산 심사의 기준이 됩니다.</li>
+  <li><strong>제보와 홍보.</strong> 행감 시기에는 제보가 들어오고, 성과를 지역 현수막·보도자료로 알릴 수 있습니다.</li>
+</ul>
+
+<h3>여당 의원의 행감</h3>
+<p>여당은 <strong>협력적인 자세로</strong>, 야당은 비판적인 자세로 견제·감시하지만, 본질은 둘 다 견제·감시입니다. 행정은 들여다보지 않으면 썩습니다. 1,400만 도민이 직접 볼 수 없으니 167명의 의원이 대신 들여다보는 자리입니다. 의원끼리 싸워 감사가 파행되면 공무원들은 괴로운 척하지만 속으로는 웃습니다. "이 시간만 지나면 끝"이기 때문입니다.</p>
+
+<!-- ───────── 3 ───────── -->
+<h2 id="calendar">행감 1년 달력</h2>
+<p>행감은 11월 정례회의 2주가 아니라 1년짜리 농사입니다. 강사의 비유로는 "쌀 한 톨에 농부의 발걸음 88번". 깊이 갈고, 씨 뿌리고, 물 대고, 김을 매야 가을에 거둡니다.</p>
+<div class="tbl"><table>
+  <thead><tr><th>시기</th><th>할 일</th><th>포인트</th></tr></thead>
+  <tbody>
+    <tr><td>연중 (1~9월)</td><td>업무보고 받기, 상시 자료요구, 현장 방문, 민원·제보 정리</td><td>자료요구는 횟수 제한이 없다. 하루 10건도 된다. 주제별 파일로 쌓아 둔다.</td></tr>
+    <tr><td>감사 약 2달 전</td><td>감사계획서 작성, <strong>자료요구 목록</strong> 작성(의원 개인 + 위원회 공통)</td><td>가장 중요한 단계. 묻지 않으면 답은 오지 않는다. 표 양식을 만들어 요구한다.</td></tr>
+    <tr><td>감사 약 1달 전</td><td>본회의에서 감사계획 승인 → 요구자료 도착 → 분석</td><td>전문위원실과 함께 빈 곳·이상한 숫자를 찾는다. 질의 주제 확정.</td></tr>
+    <tr><td>감사 기간</td><td>광역은 <strong>14일 이내</strong>(시·군·구 9일). 주말 빼면 실제 약 10일</td><td>위원회 회의실 감사가 기본, 필요하면 피감기관 현장 감사를 섞는다.</td></tr>
+    <tr><td>감사 직후</td><td>감사결과보고서 채택(시정·처리·건의 구분), 본예산 심사</td><td>행감에서 찾은 문제를 예산 심사 기준으로 바로 쓴다.</td></tr>
+    <tr><td>다음 해</td><td>시정·처리 요구 이행 결과 보고 확인</td><td>이행 안 된 건은 다음 행감의 첫 질문이 된다.</td></tr>
+  </tbody>
+</table></div>
+<p class="meta">참고: 경기도 조례는 "1차 또는 2차 정례회"에 감사하도록 되어 있으나, 경기도의회는 실제로 2차 정례회(11월)에 합니다. 강사는 결산과 1년 실적이 다 나온 2차 정례회 감사가 맞다는 입장입니다.</p>
+
+<h3>회의실 감사와 현장 감사</h3>
+<div class="grid">
+  <div><h4>회의실 감사 (기본)</h4><p>이동 시간이 없어 시간이 절약되고, 자료가 모두 의회에 있어 진행이 원활합니다.</p></div>
+  <div><h4>현장 감사 (가끔 섞기)</h4><p>현장을 보면 상황 파악이 한 번에 됩니다. 매년 예산을 올렸다가 부서 단계에서 잘리는 사업 중에 "5천만 원만 있어도 훌륭한 사업"이 보입니다. 다만 이동 시간으로 일정이 무너지지 않게 계획합니다.</p></div>
+</div>
+
+<!-- ───────── 4 ───────── -->
+<h2 id="strategy">7대 전략</h2>
+
+<h3>① 서면감사가 감사의 50% 이상이다</h3>
+<p>평소 고민과 분석을 담아 자료를 요구하면 서면 답변이 오는데, 그 자체가 이미 감사입니다. 한 부서에 10개를 물었다면 현장에서 2~3개만 질의해도, 담당 과장은 10개 모두 문제점을 파악하고 개선 방향을 책자로 제출해야 합니다. 나머지 8개도 다른 의원이 물을 수 있고, 묻지 않아도 개선 대책이 이미 만들어졌습니다. 그래서 꼼꼼하게 요구하는 것이 중요합니다.</p>
+
+<h3>② 구체적 목표, 선택과 집중</h3>
+<p>시간은 한정되어 있고 부서와 업무는 많습니다. "이번 행감에서 이 부분은 꼭 개선해 놓겠다"는 목표를 한두 개 정합니다.</p>
+
+<h3>③ 팀플레이</h3>
+<p>위원장을 중심으로 위원회 전체가 공감하는 문제는 여야를 떠나 집중 공략합니다. 같은 당 위원끼리는 주제를 나눠 겹치지 않게 하고, 한 위원이 기본 질의로 문제를 드러내면 다른 위원이 보충 질의로 대안을 받아내는 식으로 연결합니다.</p>
+
+<h3>④ 결과를 반드시 예산에 담는다</h3>
+<p>아무리 좋은 지적도 예산이 없으면 작동하지 않습니다. 예산은 "숫자로 된 정책"이고, 모든 예산에는 주인(수행자·이해관계자)이 있습니다. 함부로 잘라낼 수도, 그냥 늘릴 수도 없으니 행감에서 근거를 만들어 두어야 예산 심사에서 설득할 수 있습니다.</p>
+
+<h3>⑤ 큰소리 대신 합리적 대안</h3>
+<p>마음에 안 든다고 화를 내거나 물건을 던지면 안 됩니다. 모든 발언은 중계되고 속기록으로 영구히 남습니다. 의원은 자료에 근거해 과학적·논리적으로 말해야 합니다. 화가 끓어오르면 문을 열고 나가 찬물을 마시고 진정한 뒤 들어오세요. 실수하면 노조가 "자질 없는 의원 사퇴하라" 현수막을 걸고, 당에 공천 문제로 민원을 넣는 일도 실제로 있습니다.</p>
+
+<h3>⑥ 한 부서에 한 주제 이상</h3>
+<p>의원마다 전공이 달라 접근하기 어려운 부서는 자료요구가 잘 안 되고, 그러면 감사가 그냥 지나가는(패싱) 경향이 있습니다. 그런 부서일수록 문제가 많습니다. 어려운 부서는 전문위원실·위원장과 상의해 최소 한 주제는 반드시 봅니다.</p>
+
+<h3>⑦ 공무원을 인격적으로 존중한다</h3>
+<p>공무원도 도민을 위해 일하는 사람입니다. 서로 좋은 정책을 합리적으로 이야기해 더 나은 경기도를 만드는 자리라는 인식이 필요합니다. 반대로, 보지도 않을 자료를 너무 많이 요구해 "복사기가 고장 났다"며 노조가 문제 삼은 기초의회 사례도 있습니다. 필요한 자료를 정확하게 요구하는 것이 존중입니다.</p>
+
+<div class="note"><b>공무원과 의원은 바라보는 곳이 다르다</b>공무원은 승진과 평가 때문에 도지사를 바라보고, 의원은 주민을 바라봅니다. 공무원은 전례 답습을 좋아하고 새 일을 꺼리며, 공급자 중심으로 생각하는 경향이 있습니다. 그래서 의회가 주민의 눈으로 들여다봐야 합니다. 동시에 의회 의결 없이는 집행부가 아무것도 못 한다는 점을 집행부도 잘 압니다. 대등한 위치에서 상생·협력하되 견제하는 자세가 필요합니다.</div>
+
+<!-- ───────── 5 ───────── -->
+<h2 id="request">자료요구 잘하는 법</h2>
+<p>행감의 성패는 자료요구 목록에서 갈립니다. 머릿속에 아무리 좋은 생각이 있어도 <strong>묻지 않으면 답이 오지 않습니다.</strong> 그리고 두루뭉술하게 물으면 핵심을 찌를 수 없습니다.</p>
+
+<h3>꼭 받아야 할 자료 7가지</h3>
+<div class="tbl"><table>
+  <thead><tr><th>자료</th><th>왜 보나</th><th>요령</th></tr></thead>
+  <tbody>
+    <tr><td><strong>사업 계획서·방침서</strong></td><td>업무보고는 집행부가 하고 싶은 말만 요약한 것. 계획서에 속살이 있다.</td><td>1년 치가 아니라 <strong>3년 치</strong>를 받아 목표가 어떻게 바뀌었는지 비교</td></tr>
+    <tr><td><strong>평가 보고서</strong></td><td>행정은 끝나면 반드시 평가한다. 스스로 매긴 성적표</td><td>자체평가와 외부평가를 모두 요구</td></tr>
+    <tr><td><strong>용역 보고서</strong></td><td>사업의 근거. 결론을 정해 놓고 짜맞춘 용역이 있다</td><td>용역 수행기관이 산하기관인지 확인(한강버스 사례)</td></tr>
+    <tr><td><strong>도지사 보고 원본</strong></td><td>도지사에게는 장단점·우려사항을 다 넣고, 의회에는 불리한 걸 빼고 가공해 오는 경향</td><td>"도지사 보고 원본 그대로, <strong>원본대조필</strong> 날인"으로 요구</td></tr>
+    <tr><td><strong>각종 위원회 회의록</strong></td><td>도시계획·보조금·사회단체 등 심의위원회 회의록에 결정 과정이 남아 있다</td><td>위원 명단과 함께 요구</td></tr>
+    <tr><td><strong>설계변경 내역</strong></td><td>원칙은 설계변경 없이 끝나야 한다. 2~3번 변경되면 공사비가 오르고 공기가 늘어난다</td><td>사업별 변경 횟수·증액·사유·업체 표로</td></tr>
+    <tr><td><strong>계약서·계약 현황</strong></td><td>수의계약·특정업체 반복 확인</td><td>부서별·업체별 건수 상위순(Top-down) 정렬로</td></tr>
+  </tbody>
+</table></div>
+
+<div class="warn"><b>설계변경을 왜 의심해야 하나</b>예를 들어 공원녹지 분야 공무원이 퇴직하면 조경업체로 가는 경우가 있습니다. 업체에는 아는 선후배가 있고, 업체는 일단 낮은 가격으로 낙찰받은 뒤 설계변경을 두세 번 해서 이윤을 챙기는 일이 생길 수 있습니다. 설계변경 횟수와 증액 규모, 같은 업체 반복 여부는 반드시 확인하세요.</div>
+
+<h3>자료 받는 형식과 관리</h3>
+<ul>
+  <li><strong>종이 + 이메일(파일) 둘 다 받는다.</strong> 종이만 받으면 행사 몇 번 다녀오는 사이 쌓여서 무엇이 있는지 모르게 됩니다. 파일은 집에서 도정질문을 쓰다가도 바로 확인할 수 있습니다.</li>
+  <li><strong>엑셀 원자료로 받는다.</strong> 31개 시군별·연도별 비교를 직접 정렬해 볼 수 있어야 합니다.</li>
+  <li><strong>주제별로 파일링한다.</strong> 5년, 10년 쌓이면 그 자체가 그 분야의 역사가 되고, 의원의 전문성이 됩니다.</li>
+</ul>
+
+<h3>좋은 자료요구 vs 나쁜 자료요구</h3>
+<div class="do-dont">
+  <div><h4><span class="stamp s-red">나쁜 예</span></h4>
+  <p>"○○ 사업 추진 현황 일체"</p>
+  <p class="meta">범위가 넓어 집행부가 유리한 내용만 골라 요약해 옵니다. 비교 기준이 없어 문제가 안 보입니다.</p>
+  <p class="meta">실제 사례: 한 군의원이 "신고가 몇 건이냐" 묻자 과장이 "조금"이라고 답했는데, 의원도 데이터가 없어 더 묻지 못했습니다. "주 1회 반찬 지원인데 격주로 하더라"고 묻자 "잘 파악이 안 됐다, 나중에 드리겠다"로 끝났습니다. 그 속기록은 의원 이름과 함께 영원히 공개됩니다.</p></div>
+  <div><h4><span class="stamp s-green">좋은 예</span></h4>
+  <p>"최근 3년간(2023~2025) 31개 시군별 ○○ 시설 수, 정원, 이용 대상자 수, 수용률을 아래 표 양식에 맞춰 엑셀로 제출"</p>
+  <p class="meta">실제 사례: 강사는 서울 25개 구별 공립유치원(단설·병설) 정원, 취약아동 수, 수용률 표를 받아 도봉구가 꼴찌임을 숫자로 보여 주고, 3~5년 증설 계획을 받아냈습니다. 사립유치원 원장들이 항의했지만 숫자가 근거였기에 돌파할 수 있었습니다.</p></div>
+</div>
+
+<h3>자료요구서 기본 양식</h3>
+<div class="req">
+  <p><strong>[자료요구] ○○과 / 요구의원: ○○○</strong></p>
+  <ol>
+    <li><strong>제목</strong>: 최근 3년간 ○○ 사업 예산 편성·집행·불용 현황</li>
+    <li><strong>기간</strong>: 2023~2025 회계연도 (2026년은 9월 말 기준)</li>
+    <li><strong>항목</strong>: 사업명 / 예산액 / 집행액 / 집행률 / 불용액 / 불용 사유 / 담당 부서</li>
+    <li><strong>정렬</strong>: 집행률 낮은 순</li>
+    <li><strong>형식</strong>: 엑셀 원본 파일 + 출력본, 근거 문서 사본(원본대조필)</li>
+    <li><strong>추가</strong>: 문제점 및 개선 대책을 서술형으로 함께 제출</li>
+  </ol>
+</div>
+<p class="meta">마지막 줄 "문제점 및 개선 대책을 함께 제출"이 서면감사의 핵심입니다. 질의하지 않아도 집행부가 스스로 개선책을 써 내게 됩니다.</p>
+
+<h3>공통 자료와 개인 자료</h3>
+<p>위원장·전문위원실이 만드는 <strong>위원회 공통 자료목록</strong>과 의원 개인 자료요구가 합쳐져 감사자료가 됩니다. 서울시의회 기획경제위원회 예시로, 기획조정실 한 곳에만 공통 108건 + 의원 개별 121건, 모두 229건이 요구되어 책자 두 권이 왔고, 위원회 전체로는 약 30권이 왔습니다. 개인 요구는 직접 표 양식을 만들어 보내는 의원이 많습니다.</p>
+
+<!-- ───────── 6 ───────── -->
+<h2 id="finance">재정 기본기: 숫자 6개만 알면 된다</h2>
+<p>재정은 어렵게 느껴지지만 행감에서 쓰는 개념은 몇 개 안 됩니다. 아래 6가지만 이해하면 어떤 부서의 예산도 물을 수 있습니다.</p>
+
+<h3>1. 경기도 살림은 어디서 오나: 세입 6가지</h3>
+<div class="tbl"><table>
+  <thead><tr><th>재원</th><th>쉬운 설명</th><th>도지사가 조절 가능?</th></tr></thead>
+  <tbody>
+    <tr><td>지방세</td><td>경기도가 직접 걷는 세금(도세 6개 세목)</td><td>세율은 법으로 정해져 거의 못 함</td></tr>
+    <tr><td>세외수입</td><td>사용료, 수수료, 과태료 등</td><td><strong>추정치를 늘리고 줄일 수 있음</strong></td></tr>
+    <tr><td>지방교부세</td><td>국가가 내려주는 돈(경기도 본청은 보통교부세를 받지 않음)</td><td>국가가 정함</td></tr>
+    <tr><td>보조금</td><td>국가 사업을 하라고 주는 돈. 도비를 맞춰 넣어야(매칭) 함</td><td>국가가 정함</td></tr>
+    <tr><td>지방채</td><td>빚</td><td>한도 내 가능</td></tr>
+    <tr><td>보전수입 등 및 내부거래</td><td>작년에 남은 돈(순세계잉여금), 기금·특별회계에서 끌어온 돈</td><td><strong>마음대로 늘리고 줄일 수 있음</strong></td></tr>
+  </tbody>
+</table></div>
+<div class="note"><b>예산 심사 때 집중할 곳</b>지방세·교부세·보조금은 법이나 국가 문서로 정해져 내려오므로 도지사가 손대기 어렵습니다. 반면 <strong>세외수입, 보전수입, 내부거래</strong>는 집행부가 늘렸다 줄였다 할 수 있습니다. 예산을 부풀리거나 숨기는 곳이 여기입니다.</div>
+
+<h3>2. 순세계잉여금: 다 쓰고 "진짜 남은 돈"</h3>
+<p>1년 살림을 다 살고 법적으로 넘겨야 할 돈까지 빼고 순수하게 남은 돈입니다. 이 돈이 왜 남았는지가 중요합니다.</p>
+<ul>
+  <li><strong>초과세입(세입 결손)</strong>: 걷겠다고 계획한 것보다 더 걷혔거나 덜 걷힌 것. 예산서에서 <strong>△(세모)는 마이너스</strong>입니다. 1,000원 걷겠다 해 놓고 800원 걷혔다면 세입을 부풀린 것입니다.</li>
+  <li><strong>집행잔액</strong>: 쓰겠다고 했는데 안 쓴(못 쓴) 돈. 낙찰 차액, 사업 지연, 사업 취소 등 여러 이유로 남습니다.</li>
+</ul>
+<div class="tbl"><table>
+  <thead><tr><th>경기도 결산(강의 자료)</th><th>순세계잉여금</th><th>초과세입</th><th>집행잔액</th><th>읽는 법</th></tr></thead>
+  <tbody>
+    <tr><td>2024 회계연도</td><td class="num">약 4,758억</td><td class="num">△ 약 2,212억</td><td class="num">약 6,970억</td><td>세입을 실제보다 크게 잡았고, 쓰지 못한 돈도 많았다</td></tr>
+    <tr><td>2023 회계연도</td><td class="num">약 7,940억</td><td class="num">약 4,419억</td><td class="num">-</td><td>연도별 비율을 비교해 예산 심사 기준으로 삼는다</td></tr>
+  </tbody>
+</table></div>
+
+<h3>3. 세수진도율과 집행률: 들어오는 속도, 나가는 속도</h3>
+<div class="grid">
+  <div><h4>세수진도율 (들어오는 쪽)</h4><p>계획한 세금이 월별로 제때 들어오는지 확인하는 비율. 7월 말까지 10조가 들어와야 하는데 9조만 들어왔다면 1조 펑크, 연말엔 2조 펑크가 예상되어 긴축에 들어가야 합니다.</p></div>
+  <div><h4>집행률 (나가는 쪽)</h4><p>사업비를 얼마나 썼는지. 6월 말이면 절반은 써야 하는데 5%, 10%인 사업, 연말까지 0%인 사업이 많습니다. 기준을 정해(예: 50% 이상 불용) 통계로 걸러 봅니다.</p></div>
+</div>
+<div class="warn"><b>세수가 부족하면 "줘야 할 돈"을 안 줄 수도 있다</b>경기도는 교육청(법정전출금)과 31개 시군(조정교부금)에 법으로 정해진 돈을 나눠 줘야 합니다. 서울시는 2023년 세수 부족으로 교육청·자치구에 줄 돈 약 1,800억을 제때 안 주고 이듬해 추경으로 줬습니다. 경기도도 살림이 어려우면 같은 일이 생길 수 있으니 <strong>법정전출금 지급 시기와 미지급액</strong>을 확인하세요.</div>
+
+<h3>4. 채무와 부채: 둘은 다르다</h3>
+<div class="grid">
+  <div><h4>채무</h4><p>돈을 빌려 <strong>지금 이자가 나가고 갚아야 하는</strong> 돈(지방채 등). 악성에 가깝다.</p></div>
+  <div><h4>부채</h4><p>언젠가는 갚아야 할 모든 의무. 임대보증금, 퇴직급여충당부채처럼 당장 이자가 안 나가는 것도 포함. 모든 부채가 나쁜 것은 아니다.</p></div>
+</div>
+<ul>
+  <li><strong>예산 대비 채무비율</strong>: 25%를 넘으면 <strong>재정주의</strong>, 40%를 넘으면 <strong>재정위기단체</strong>로 지정되어 정부가 재정을 사실상 통제합니다(인천시가 아시안게임 무렵 40% 근처까지 갔던 사례). 경기도 본청은 약 12.86%(행안부 2025년 말 공개 기준)로 높지 않지만, 경기도 내 일부 시는 높은 편입니다.</li>
+  <li><strong>본청 채무만 보면 안 된다.</strong> 서울시는 본청 빚을 투자기관(교통공사·SH)에 떠넘겨 본청 채무를 줄였습니다. 반드시 산하 공사·공단·출연기관까지 합친 <strong>통합채무·통합부채</strong>를 보세요.</li>
+  <li><strong>채무비율은 "산수"로 바뀐다.</strong> 비율의 분모가 예산이기 때문에, 순세계잉여금을 미리 당겨 쓰거나 내부거래·차환채를 늘려 예산을 부풀리면 빚은 그대로인데 비율만 떨어집니다. 12.86%라는 숫자를 절대적으로 믿지 말고 금액과 이자를 같이 보세요.</li>
+  <li><strong>이자율 갈아타기.</strong> 고금리 지방채를 저금리로 바꾸는(차환) 노력을 하고 있는지 확인합니다. 지방채는 금리 구간별(1% 미만, 1~2%, 2~4%…)로 현황이 공개됩니다.</li>
+</ul>
+
+<h3>5. 재정자립도와 재정자주도: 자주도가 더 중요하다</h3>
+<div class="grid">
+  <div><h4>재정자립도</h4><p>전체 살림 중 <strong>스스로 번 돈</strong>(지방세+세외수입) 비율. 경기도는 광역 중 상위권(약 45% 내외)이라 "자립도 높은데 무슨 재정난이냐"는 반론을 받습니다.</p></div>
+  <div><h4>재정자주도</h4><p>전체 살림 중 <strong>자율적으로 쓸 수 있는 돈</strong> 비율(자체수입 + 용도 제한 없는 교부세 등). 교부세를 많이 받는 전남·경북은 자주도가 크게 올라가지만, 경기도는 거의 안 올라 도 단위에서 하위권입니다.</p></div>
+</div>
+<p>그래서 경기도 재정의 어려움을 말할 때는 <strong>자립도가 아니라 자주도</strong>로 논리를 펴야 설득력이 있습니다. 참고로 의정부시는 자주도가 약 43%로 도내 최하위권이며, 2024년 예비비가 약 4억 7천만 원(약 2조 원 예산 대비 사실상 0%)에 불과했습니다. 경전철 적자(연 250~300억)처럼 정책 하나가 재정을 짓누른 사례입니다.</p>
+
+<h3>6. 통합재정안정화기금: 지갑 하나에 칸 두 개</h3>
+<p>예전에 따로 있던 "재정안정화기금"과 "통합관리기금"을 하나의 기금으로 합치고, 성격이 달라 계정을 두 개로 나눈 것입니다. 지갑 하나에 카드 칸과 지폐 칸이 따로 있다고 생각하면 됩니다.</p>
+<div class="tbl"><table>
+  <thead><tr><th>계정</th><th>성격</th><th>일반회계가 꺼내 쓰면</th></tr></thead>
+  <tbody>
+    <tr><td><strong>재정안정화계정</strong></td><td>세금이 예상보다 많이 들어온 해에 어려울 때를 대비해 붓는 <strong>비상금 적금</strong></td><td>갚지 않아도 됨</td></tr>
+    <tr><td><strong>통합계정</strong></td><td>다른 기금의 여유자금을 모아 둔 <strong>재정의 저수지</strong>(남의 돈)</td><td><strong>원금과 이자를 갚아야 함</strong>(빌린 돈)</td></tr>
+  </tbody>
+</table></div>
+<ul>
+  <li>통합계정 잔액은 다른 기금 돈을 옮겨 온 것이라 <strong>이중 계산된 허수</strong>가 있습니다. 기금 총액을 볼 때 빼고 봐야 합니다.</li>
+  <li>강의 자료 기준 경기도 재정안정화계정은 약 2,053억 중 642억을 써서 약 1,411억이 남았습니다. 단체장 임기 말에는 비상금을 야금야금 꺼내 쓰는 경향이 있습니다.</li>
+  <li>경기도 조례는 결산잉여금의 30%를 적립하도록 하고 있습니다. <strong>실제로 조례대로 적립했는지</strong> 확인하세요. 다른 지자체는 "3년 평균의 150% 초과분의 10%"처럼 문턱을 높여 사실상 적립하지 않아도 되게 만든 조례도 있습니다.</li>
+</ul>
+
+<!-- ───────── 7 ───────── -->
+<h2 id="points">분야별 점검 포인트</h2>
+<p>행감에서 반드시 보는 기본 축은 다음과 같습니다: 법·조례 위반, 주민 불편·집단민원, 예산 낭비·부실공사·안전 문제, 부정·비리, 형평성(31개 시군 간), 효과성. 아래는 강의에서 짚은 구체 포인트입니다.</p>
+
+<h3>정책: 하나의 정책이 지역을 흥하게도 망하게도 한다</h3>
+<ul>
+  <li><strong>김포골드라인</strong>: 정원이 적은(약 172명) 2량 경전철을 임기 내 완공하려고 서두른 결과, 주민이 오랫동안 고생하고 있습니다.</li>
+  <li><strong>의정부·용인 경전철</strong>: 운영 적자가 매년 수백억. 재정이 좋은 용인은 버텼지만 의정부는 예비비조차 편성하기 어려운 수준이 됐습니다.</li>
+  <li><strong>서울 한강버스</strong>: 용역을 서울시 산하기관(서울시립대)에 맡겨 장밋빛 결과(17노트, 약 시속 30km)를 냈지만 실제는 그보다 느렸습니다. 총사업비 300억 이상이면 받아야 할 중앙투자심사를 피하려고 시설비를 쪼개 300억 미만으로 맞춰 자체 심사만 했다는 지적을 받았습니다.</li>
+  <li><strong>무리한 공약</strong>: 임기 내 재원 대책 없이 수조 원이 드는 공약(예: 소도시 트램)을 이행계획서에 그대로 옮긴 사례. 공약은 인수위 검토 과정에서 축소·폐기할 수도 있어야 합니다.</li>
+</ul>
+<div class="note"><b>행감에서 이렇게 응용한다</b>경기도 대형사업마다 ① 용역을 누가 했는지(산하기관인지) ② 수요예측과 실제 이용 실적 차이 ③ 투자심사 기준선(300억 등) 바로 아래로 쪼갠 사업이 없는지 ④ 운영 적자 추계를 확인하세요.</div>
+
+<h3>공유재산: 의회 승인 기준 아래에서 사고판다</h3>
+<p>경기도는 20억 원 이상 공유재산 취득·처분만 의회 관리계획 의결을 받습니다. 20억 미만은 의회를 거치지 않습니다. 서울의 한 구청은 구청장 선거를 도운 지인의 건물 지하 빈 식당을 매입해 청년시설을 넣었습니다. 반대로 공유지를 특정 업체에 싸게 팔 수도 있습니다.</p>
+<ul>
+  <li>자료요구: "최근 3년간 20억 미만(예: 1억 이상) 공유재산 취득·처분 내역, 상대방, 감정가 대비 거래가"</li>
+  <li>2022년 공유재산법 시행령 개정으로 의회 의결 대상 기준액을 지자체가 조례로 정할 여지가 생겼습니다(서울시는 40억 상향 시도를 의회가 막고 20억 유지, 청도군은 10억→5억, 공주시는 10억→1억으로 낮춤). 경기도 기준이 적정한지 검토해 볼 만합니다. <span class="meta">※ 구체 범위는 시행령·조례 원문으로 확인</span></li>
+</ul>
+
+<h3>민간위탁: 감시가 멈추면 비리가 터진다</h3>
+<p>수련관·복지관·어린이집 등 위탁사업은 아래 표로 받아 보세요. 같은 수탁자가 30년째 맡은 곳이 있다면 이유는 둘 중 하나입니다. 정말 잘하거나, 유착이 있거나. 평가에서 지적을 많이 받고도 재선정되었다면 후자를 의심해야 합니다.</p>
+<div class="tbl"><table>
+  <thead><tr><th>사업(시설)명</th><th>수탁자</th><th>최초 수탁연도</th><th>계약기간</th><th>선정방식(공모/수의)</th><th>최근 3년 평가점수</th><th>지적사항</th><th>외부 회계감사 여부</th></tr></thead>
+  <tbody><tr><td colspan="8" class="meta">요구 양식 예시 — 집행부가 채워 제출</td></tr></tbody>
+</table></div>
+<ul>
+  <li><strong>외부 회계감사</strong>: 서울시는 조례로 수탁기관이 매년 결산서에 대해 <strong>시장이 지정한 외부 공인회계사</strong>의 감사를 받게 합니다. 회계사는 허위 감사보고서를 쓰면 자격이 취소되므로 객관적일 수밖에 없습니다. 담당 주무관이 직접 주고, 평가하고, 회계 점검까지 하면 객관성이 없습니다. 경기도 조례가 어떻게 되어 있는지 확인하세요.</li>
+  <li>예산 과목으로 보면 민간위탁금(307-05), 민간위탁사업비(402-03)입니다. 강의 자료 기준 경기도 일반회계 민간위탁 예산은 약 1,249억(0.35%).</li>
+</ul>
+
+<h3>보조사업 평가: 객관적으로 매겼나</h3>
+<p>행정안전부는 보조사업 평가에서 "미흡" 10% 이상, "매우 미흡" 5% 이상을 반드시 만들도록 했습니다. 매우 미흡은 다음 해 중단, 미흡은 감액 대상입니다. 문제는 힘 있는 부서·단체 사업은 빠지고, 없어져도 상관없는 사업이 이 구간에 채워질 수 있다는 점입니다. <strong>평가가 공정했는지</strong>를 들여다보세요.</p>
+
+<h3>성과지표: "했다"가 아니라 "좋아졌다"를 재야 한다</h3>
+<p>예산서에는 성과계획서, 결산서에는 성과보고서가 붙습니다. 공무원은 가만히 있어도 달성되는 지표를 좋아합니다.</p>
+<div class="tbl"><table>
+  <thead><tr><th>나쁜 지표(실적)</th><th>좋은 지표(성과)</th></tr></thead>
+  <tbody>
+    <tr><td>수질검사 안내문 90통 발송 → 100% 달성</td><td>수질이 얼마나 개선되었나</td></tr>
+    <tr><td>목표 30건, 실적 86건 → 250% 달성(목표를 일부러 낮게)</td><td>현실적 목표 대비 달성률, 전년 대비 개선</td></tr>
+    <tr><td>거주자 주차 공유 MOU 570건 → 114% 달성</td><td>실제 주민 이용 면수(403건)</td></tr>
+    <tr><td>의원 역량교육 연 5회 실시 → 100%</td><td>의원 수요조사 반영 맞춤교육, 만족도·활용도</td></tr>
+  </tbody>
+</table></div>
+<p>경기도 성과지표는 약 615개입니다. 달성/미달성을 보는 것이 아니라 <strong>지표 자체가 제대로 설정됐는지</strong>를 보는 것이 핵심입니다.</p>
+
+<h3>불용·이월: 100% 불용 사업 찾기</h3>
+<p>"최근 3년간 부서별 예산 대비 100% 불용 사업"을 요구하면 매년 반복되는 사업이 보입니다. 이것을 예산 심사 때 삭감 기준으로 씁니다. 단, <strong>"착한 불용"</strong>도 있습니다. 의원 상해치료비처럼 아무 일이 없어서 안 쓴 돈은 칭찬할 일입니다. 대부분(약 99%)은 사업을 하겠다며 받아 놓고 못 한 "나쁜 불용"입니다.</p>
+
+<h3>수의계약: 아는 업체에 100원짜리를 100원에</h3>
+<p>공개입찰이면 100원짜리가 80원에 낙찰되는데, 수의계약은 100원에 갑니다. 아는 업체에 주면 비리 소지가 생기고, 실력 없는 업체가 하면 하자가 많습니다.</p>
+<ul>
+  <li>자료요구: "최근 3년 부서별 공사·물품·용역 수의계약 현황, 업체별 계약 건수 상위 20개 순"</li>
+  <li><strong>재난·수해 때 특히 조심</strong>: 긴급 발주는 수의계약 한도가 사실상 없어 비리가 가장 많이 생기는 시기입니다(산불 임시주택이 부실 시공으로 떠내려간 사례).</li>
+  <li>정부가 2026년 8월 동일 업체와 반복 수의계약을 제한하는 기준(광역 7회, 기초 5회 이상 금지)을 발표했습니다. 경기도·교육청이 지키는지 확인하세요.</li>
+</ul>
+
+<h3>공직기강</h3>
+<p>성비위, 품위손상, 횡령(코인 투자 실패로 공금 횡령, 김포 산하기관 직원 대규모 횡령 등), 교부세 감액(법령 위반으로 국가가 교부세를 깎는 것) 현황을 연도만 바꿔 매년 요구하세요. 징계 수위가 적정했는지, 재발 방지 대책이 실제로 작동하는지 봅니다.</p>
+
+<h3>주민참여예산</h3>
+<p>지방재정법상 의무입니다. 강의 자료 기준 경기도 2026년 61건, 약 159억. 규모가 적정한지, 단체장이 하고 싶은 사업에 "주민참여예산" 옷만 입혀 오지 않았는지(전남 해남 600건·1,353억 사례), 주민이 재정을 알 수 있도록 교육·지원센터가 있는지 확인합니다. 2년 연속 0원이었던 지자체는 정부 평가에서 경고를 받았습니다.</p>
+
+<h3>재정분석·기금 성적표</h3>
+<p>행정안전부는 결산이 끝나면 지자체 재정을 건전성·효율성·계획성으로 평가해 성적표를 매깁니다(예: 2024 회계연도 → 2025년 평가). 강의 자료 기준 경기도는 2023년 평가에서 도 단위 최하위권, 통합재정수지 비율·관리채무·통합부채·세수오차비율·민간위탁 증감률 등 부진 지표가 다수였습니다. 기금 평가는 72.82점(17개 시도 중 11위), 75.67→73.5→72.82점으로 하락 추세이고, 특히 <strong>기금 수가 너무 많다</strong>는 항목에서 10점 만점에 2점을 받았습니다.</p>
+<ul>
+  <li><strong>세수오차비율</strong>: 100원 걷힐 거라 했는데 90원이나 110원이 걷혔다면 오차가 큰 것. 예산을 정확하게 짜지 못했다는 뜻입니다.</li>
+  <li><strong>기금 통폐합</strong>: 법은 기금을 5년 존속기한으로 두고 필요 없으면 폐지하라고 합니다. 칸을 너무 많이 나누면 돈이 묶여 융통성이 떨어집니다. 부서별로 "존치 필요성"을 물으세요.</li>
+</ul>
+
+<h3>증인·참고인 채택</h3>
+<p>증인은 거짓 증언하면 고발되고, 참고인은 법적 책임이 없는 사람입니다. 불출석하면 과태료를 매길 수 있지만 출장·입원 등 사유를 대면 못 매기는 경우가 많습니다. 광역의회는 기초보다 민간인 증인 채택이 수월한 편이므로, 평가가 계속 나쁜데 오래 수탁하고 있는 법인의 대표 등 <strong>꼭 필요한 사람은 증인으로 부를 필요</strong>가 있습니다. 압력이 들어올 수 있으니 위원회 차원에서 결정하세요.</p>
+
+<!-- ───────── 8 ───────── -->
+<h2 id="scripts">실전 질의 대본 12선</h2>
+<p>각 대본은 <strong>① 왜 보나 → ② 미리 낼 자료요구 → ③ 질의 대본(예상 답변과 받아치기) → ④ 결과보고서 반영 문구</strong> 순서입니다. 괄호 안 ○○는 받은 자료의 실제 숫자로 채우세요. 기본 질의 7분 안팎을 기준으로 썼습니다.</p>
+
+<!-- 1 -->
+<div class="script">
+  <div class="hd"><h3>1. 순세계잉여금 "미리 당겨쓰기"</h3><span class="stamp s-amber">처리</span><span class="meta">기획조정실·예산담당관</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>결산이 끝나기도 전에 작년 남은 돈을 다음 해 본예산 세입에 미리 넣으면 예산이 부풀고, 실제로 덜 남으면 구멍이 납니다. 교육청·시군에 나눠 줄 돈까지 미리 써 버리는 셈이 될 수 있습니다. 서울시는 본예산에 순세계잉여금을 0원으로 잡고, 결산 후 법정 배분 → 기금 적립 → 빚 상환(50%) 뒤 남은 돈만 추경에 씁니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 5년간 결산상 순세계잉여금(일반회계) 확정액과, 그 다음 연도 본예산에 미리 편성한 순세계잉여금 금액·비율</li>
+    <li>순세계잉여금 발생 원인별 내역(초과세입, 집행잔액, 불용 사유별)</li>
+    <li>같은 기간 교육청 법정전출금·시군 조정교부금 정산 지급 시기 및 미지급액</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>실장님, 제출하신 자료를 보면 2024 회계연도 일반회계 순세계잉여금이 ○○억인데, 결산도 확정되기 전인 본예산에 ○○억, 즉 ○○%를 미리 세입으로 잡으셨습니다. 맞습니까?</span></p>
+    <p><span class="who">실장</span><span>네, 재정 여건상 가용재원을 최대한 확보하기 위해 편성했습니다.</span></p>
+    <p class="me"><span class="who">위원</span><span>만약 결산 결과 예상보다 적게 남으면 그 차액은 어떻게 메웁니까? 실제로 이렇게 미리 잡은 금액보다 확정액이 적었던 해가 있습니까?</span></p>
+    <p class="me"><span class="who">위원</span><span>서울시는 순세계잉여금을 본예산에 0원으로 잡고, 결산 확정 후 교육청·자치구 배분, 기금 적립, 채무 상환을 먼저 합니다. 경기도도 미리 편성 비율의 상한을 정하는 것이 맞지 않습니까? 내년 본예산부터 적용할 기준을 서면으로 제출해 주십시오.</span>
+      <span class="tip">"검토하겠다"는 답이 나오면: "검토 말고 언제까지, 비율 몇 %로 하실지 서면으로 내 주십시오."</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 순세계잉여금을 결산 확정 전 본예산 세입으로 과다 편성하는 관행을 개선하고, 사전 편성 상한 기준을 마련하여 차기 본예산부터 적용할 것.</p>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="script">
+  <div class="hd"><h3>2. 세입 과다계상과 세수오차</h3><span class="stamp s-amber">처리</span><span class="meta">기획조정실·세정과</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>결산서에서 초과세입이 △(마이너스)라는 것은 걷겠다고 한 돈이 덜 들어왔다는 뜻입니다. 세입을 부풀리면 그만큼 사업이 과다 편성되고, 하반기에 사업 중단·긴축이 생깁니다. 정부 재정분석의 "세수오차비율" 지표에서도 감점됩니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 5년 세목별(도세 6개 + 세외수입) 예산액·징수액·차이·오차율</li>
+    <li>2026년 월별 세수진도율(목표 대비 실제 징수)과 연말 예상액</li>
+    <li>세입 추계 방법과 근거자료(추계 담당 부서, 외부 전망 반영 여부)</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>2024년 결산에서 초과세입이 △○○억입니다. 1,000원 걷겠다고 해 놓고 ○○○원밖에 못 걷었다는 뜻입니다. 어느 세목에서 가장 크게 빗나갔습니까?</span></p>
+    <p><span class="who">국장</span><span>부동산 경기 침체로 취득세가 예상보다 적게 들어왔습니다.</span></p>
+    <p class="me"><span class="who">위원</span><span>부동산 경기는 예산 편성 당시에도 이미 알려진 상황이었습니다. 그런데도 취득세를 ○○억으로 잡은 근거는 무엇입니까? 그리고 올해 9월 말 세수진도율이 ○○%인데, 연말까지 얼마가 펑크날 것으로 보십니까? 그 대책은 무엇입니까?</span>
+      <span class="tip">포인트: 경기 탓으로 넘어가지 말고 "추계 방법"을 물어야 개선 요구로 이어집니다.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 세입 추계의 정확성을 높이기 위해 세목별 추계 방법을 개선하고, 분기별 세수진도율을 소관 상임위원회에 보고할 것.</p>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="script">
+  <div class="hd"><h3>3. 3년 연속 집행 부진·100% 불용 사업</h3><span class="stamp s-amber">처리</span><span class="meta">모든 실·국 공통</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>매년 예산을 받아 놓고 쓰지 못하는 사업은 다른 꼭 필요한 사업의 예산을 막고 있는 것입니다. 행감에서 찾아 두면 바로 이어지는 본예산 심사에서 삭감·조정의 근거가 됩니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 3년간 소관 부서별 예산 대비 집행률 50% 미만 사업 및 100% 불용 사업 목록(사업명, 예산, 집행, 불용액, 불용 사유)</li>
+    <li>2026년 9월 말 기준 집행률 30% 미만 사업과 연말 집행 계획</li>
+    <li>위 사업의 2027년 예산 요구액</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>○○사업은 2023년, 2024년, 2025년 3년 연속 집행률이 ○○%, ○○%, ○○%입니다. 그런데 2027년 예산으로 또 ○○억을 요구하셨습니다. 3년 동안 못 쓴 이유가 무엇입니까?</span></p>
+    <p><span class="who">과장</span><span>사업 대상자 모집이 저조해서….</span></p>
+    <p class="me"><span class="who">위원</span><span>대상자가 3년 내내 모이지 않았다면 사업 설계가 잘못된 것 아닙니까? 대상자 기준을 바꾸든지, 규모를 줄이든지 해야 합니다. 개선 방안이 없다면 이 예산은 본예산 심사에서 조정할 수밖에 없습니다. 개선 계획을 예산 심사 전까지 제출해 주십시오.</span>
+      <span class="tip">"착한 불용"(재난 대비비, 상해보상비처럼 안 쓰면 좋은 돈)은 지적 대상에서 빼세요.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 3년 연속 집행 부진 사업에 대해 원인 분석 및 사업 재설계(또는 폐지) 방안을 마련하고, 2027년 예산에 반영할 것.</p>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="script">
+  <div class="hd"><h3>4. 민간위탁 장기 수탁과 회계 투명성</h3><span class="stamp s-amber">처리</span><span class="meta">위탁시설 소관 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>한 법인이 같은 시설을 수십 년 맡고, 평가에서 지적을 받고도 재선정된다면 유착을 의심해야 합니다. 담당자가 위탁·평가·회계 점검을 모두 하면 객관성이 없습니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>소관 민간위탁 사업 전체: 시설명, 수탁자, 최초 수탁연도, 연속 수탁 횟수, 선정방식(공모/수의), 최근 3년 평가점수와 지적사항, 위탁금액</li>
+    <li>수탁기관 결산서에 대한 외부 회계감사 실시 여부와 감사인 선정 주체</li>
+    <li>수탁자 선정 심사위원회 명단과 회의록(최근 2회)</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>○○시설은 ○○법인이 ○○년부터 ○○년째 운영하고 있습니다. 최근 3년 평가에서 ○○, ○○ 지적을 받았는데 작년에 또 재선정됐습니다. 경쟁 공모였습니까? 몇 개 법인이 응모했습니까?</span></p>
+    <p><span class="who">국장</span><span>공모를 했으나 단독 응모였습니다.</span></p>
+    <p class="me"><span class="who">위원</span><span>단독 응모가 반복되는 이유는 무엇입니까? 공모 조건이 기존 수탁자에게 유리하게 짜인 것은 아닙니까? 그리고 이 법인의 회계는 누가 점검합니까? 담당 주무관이 직접 하신다면, 서울시처럼 시장이 지정한 외부 공인회계사의 회계감사를 의무화할 의향이 있습니까?</span>
+      <span class="tip">필요하면 위원회 의결로 해당 법인 대표를 증인으로 채택하는 방안도 검토합니다.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 장기·단독 수탁 시설의 공모 조건을 재검토하고, 수탁기관 결산에 대해 도지사가 지정하는 외부 회계감사를 실시할 것.</p>
+  <p class="result bl" style="margin-top:8px"><strong>건의</strong>: 민간위탁 기본 조례에 외부 회계감사 의무 조항 신설 검토(필요 시 의원 발의로 추진).</p>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="script">
+  <div class="hd"><h3>5. 수의계약 특정 업체 쏠림</h3><span class="stamp s-red">시정</span><span class="stamp s-amber">처리</span><span class="meta">계약 부서·사업 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>공무원을 따라다니며 일감을 받는 업체가 있습니다. 같은 업체에 반복해서 수의계약을 주거나, 금액 기준을 피하려고 계약을 쪼개는 것은 대표적 비위 유형입니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 3년간 부서별 공사·물품·용역 수의계약 현황(계약일, 계약명, 금액, 업체, 수의계약 사유), <strong>업체별 건수 상위 20개 순</strong> 정렬</li>
+    <li>동일 업체와 같은 해 5회 이상 계약한 내역</li>
+    <li>재난·긴급 발주 수의계약 현황과 하자 발생 내역</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>○○과 자료를 보면 ○○업체가 3년간 ○○건, 총 ○○억 원의 수의계약을 받았습니다. 같은 해 ○○월에는 같은 내용의 계약을 ○○건으로 나눠 각각 수의계약 한도 바로 아래 금액으로 체결했습니다. 왜 한 건으로 발주하지 않았습니까?</span></p>
+    <p><span class="who">과장</span><span>사업 시기가 달라서 나눠서 발주했습니다.</span></p>
+    <p class="me"><span class="who">위원</span><span>계약일을 보면 ○○일 간격밖에 안 됩니다. 분할 계약은 지방계약법상 금지되어 있습니다. 정부도 올해 8월 같은 업체와의 반복 수의계약을 제한하는 기준을 발표했는데, 경기도는 이 기준을 어떻게 반영하고 있습니까?</span>
+      <span class="tip">법 위반이 확인되면 "시정", 쏠림 현상 개선은 "처리"로 나눠 요구합니다.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result"><strong>시정요구</strong>: 동일 목적 계약을 분할하여 수의계약한 사례에 대해 경위를 조사하고 관련자를 조치할 것.</p>
+  <p class="result am" style="margin-top:8px"><strong>처리요구</strong>: 동일 업체 반복 수의계약 제한 기준을 도 계약 업무에 반영하고 이행 실태를 매년 보고할 것.</p>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="script">
+  <div class="hd"><h3>6. 쉬운 성과지표로 "초과 달성"</h3><span class="stamp s-amber">처리</span><span class="meta">모든 실·국 공통</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>목표를 일부러 낮게 잡거나, 결과(성과)가 아니라 활동(실적)을 지표로 잡으면 사업이 효과가 없어도 매년 "200% 달성"이 나옵니다. 결산 심사에서 가장 중요한 것이 성과지표입니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>소관 사업 성과지표 최근 3년 목표치·실적치·달성률, 목표 설정 근거</li>
+    <li>3년 연속 150% 이상 초과 달성한 지표 목록</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>○○사업 성과지표가 2024년 목표 30건, 실적 86건으로 287% 달성입니다. 2025년에는 목표를 40건으로 올렸는데 실적은 또 86건입니다. 목표를 실적보다 훨씬 낮게 잡는 이유가 무엇입니까?</span></p>
+    <p class="me"><span class="who">위원</span><span>그리고 이 지표는 "안내문 발송 건수"입니다. 사업의 목적은 안내문을 보내는 것이 아니라 ○○이(가) 개선되는 것 아닙니까? 실제로 ○○이 얼마나 좋아졌는지 보여 주는 지표로 바꿔야 합니다. 내년 성과계획서부터 반영해 주십시오.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 활동 실적 위주 성과지표를 결과·효과 중심 지표로 개선하고, 최근 실적을 반영한 현실적 목표치를 설정할 것.</p>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="script">
+  <div class="hd"><h3>7. 보조사업 평가의 공정성</h3><span class="stamp s-amber">처리</span><span class="meta">기획조정실·보조금 소관 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>평가 하위 15%(미흡 10%, 매우 미흡 5%)를 의무로 만들어야 하므로, 힘없는 단체 사업이 하위 구간을 채우고 힘 있는 단체 사업은 빠지는 일이 생길 수 있습니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 2년 지방보조사업 평가 결과 전체(사업명, 보조사업자, 점수, 등급), 미흡·매우 미흡 사업의 후속 조치(감액·폐지 여부)</li>
+    <li>평가위원 구성과 평가 지표</li>
+    <li>보조금 정산 결과 반환·환수 내역, 목적 외 사용 적발 내역</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>매우 미흡 판정을 받은 ○○개 사업 가운데 ○○개는 예산이 1천만 원도 안 되는 소규모 사업입니다. 반면 ○○단체의 ○○억 원짜리 사업은 정산에서 ○○ 지적을 받았는데도 "우수"입니다. 평가 기준이 무엇이었습니까?</span></p>
+    <p class="me"><span class="who">위원</span><span>그리고 매우 미흡 사업은 다음 해 중단이 원칙인데, 2026년 예산에 그대로 남아 있는 사업이 ○○개입니다. 그 이유를 서면으로 제출해 주십시오.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 보조사업 평가의 객관성을 높이기 위해 평가 지표와 평가위원 구성을 개선하고, 평가 결과를 예산 편성에 실제로 반영할 것.</p>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="script">
+  <div class="hd"><h3>8. 반복되는 설계변경</h3><span class="stamp s-amber">처리</span><span class="meta">건설·도로·공원 등 공사 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>저가로 낙찰받고 설계변경으로 공사비를 올려 주는 구조는 업체 이윤을 챙겨 주는 통로가 될 수 있습니다. 공기가 늘어나면 주민 불편도 커집니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 3년간 준공·진행 중인 공사별 설계변경 횟수, 변경 전후 금액, 증액률, 공기 연장 일수, 변경 사유, 시공사·설계사</li>
+    <li>설계변경 2회 이상 공사의 기술자문·심의 회의록</li>
+    <li>시공사 임원 중 도 퇴직 공무원 재직 현황(공직자윤리법상 취업심사 대상 여부)</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>○○공사는 낙찰가가 예정가의 ○○%였는데, 설계변경을 ○회 거치면서 최종 공사비가 ○○억, 처음보다 ○○% 늘었습니다. 공기도 ○○개월 늘었습니다. 처음 설계에서 왜 이 부분을 반영하지 못했습니까? 설계 용역사에 책임을 물었습니까?</span></p>
+    <p class="me"><span class="who">위원</span><span>이런 사례가 3년간 ○○건입니다. 설계변경 2회 이상은 외부 심의를 의무화하는 기준을 마련해 주십시오.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 반복 설계변경 공사에 대한 원인 분석 및 설계 용역사 책임 규명, 일정 횟수 이상 설계변경 시 외부 심의 의무화 방안을 마련할 것.</p>
+  </div>
+</div>
+
+<!-- 9 -->
+<div class="script">
+  <div class="hd"><h3>9. 의회 승인 기준 아래의 공유재산 거래</h3><span class="stamp s-amber">처리</span><span class="stamp s-blue">건의</span><span class="meta">회계과·재산 관리 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>20억 원 미만 재산은 의회를 거치지 않고 사고팔 수 있습니다. 지인 건물 매입이나 특정인에게 헐값 매각 같은 일이 생겨도 의회는 모를 수 있습니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 3년간 1억 원 이상 20억 원 미만 공유재산 취득·처분 내역(재산, 위치, 상대방, 감정가, 거래가, 용도)</li>
+    <li>취득 후 활용 현황(미활용·유휴 상태 재산 포함)</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>○○년 ○○동 건물을 ○○억에 매입해 청년공간으로 쓰겠다고 하셨는데, 지하층이고 현재 이용률은 ○○%입니다. 입지 선정 때 다른 후보지를 몇 곳 검토하셨습니까? 매입 결정 과정 문서를 제출해 주십시오.</span></p>
+    <p class="me"><span class="who">위원</span><span>20억 원 기준 아래에서 이뤄진 거래가 3년간 ○○건, ○○억입니다. 의회 보고 기준을 낮추거나, 최소한 분기별 거래 내역을 상임위에 보고하는 방안을 검토해 주십시오.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 미활용 취득 재산의 활용 계획을 수립하고, 의결 대상 미만 공유재산 거래 내역을 정기적으로 의회에 보고할 것.</p>
+  </div>
+</div>
+
+<!-- 10 -->
+<div class="script">
+  <div class="hd"><h3>10. 지역 민원을 행감으로 끌어올리기</h3><span class="stamp s-amber">처리</span><span class="meta">민원 소관 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>지역 민원을 상임위에서 말하면 "검토하겠다"로 끝나지만, 행감 결과보고서에 처리요구로 올리면 강제로 이행해야 합니다. 민원 하나를 "우리 지역만의 문제"가 아니라 "도 전체 기준의 문제"로 바꾸면 처리요구가 됩니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>31개 시군별 ○○ 시설(사업) 현황, 예산 투입액, 인구 대비 수치 최근 3년</li>
+    <li>예산 배분 기준(우선순위 매뉴얼)과 시군별 신청·선정 내역</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>제출하신 표를 인구 1만 명당으로 정렬해 보았습니다. ○○시는 31개 시군 중 ○○위로 가장 낮습니다. 그런데 최근 3년 신규 투자는 ○○시에 ○○%가 몰렸습니다. 배분 기준이 무엇입니까?</span></p>
+    <p><span class="who">국장</span><span>시군 신청을 받아 선정하고 있습니다.</span></p>
+    <p class="me"><span class="who">위원</span><span>신청 역량이 있는 곳만 계속 받는 구조라면 격차는 더 벌어집니다. 안전등급이나 수용률처럼 객관적 기준으로 우선순위를 정하는 매뉴얼을 만들고, 하위 시군 증설 계획을 3년 단위로 제출해 주십시오.</span>
+      <span class="tip">강사의 경험: 학교 시설 개선비를 지역구별로 받아 보니 안전등급(A~D)과 상관없이 목소리 큰 곳에 몰려 있었고, 우선순위 매뉴얼 자체가 없었습니다.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: ○○ 사업의 시군별 배분 기준을 객관화(우선순위 매뉴얼 수립)하고, 하위 시군에 대한 단계별 확충 계획을 수립할 것.</p>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="script">
+  <div class="hd"><h3>11. 비상금(재정안정화계정) 적립 실태</h3><span class="stamp s-red">시정</span><span class="meta">기획조정실</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>조례상 결산잉여금의 30%를 비상금으로 적립해야 하는데, 실제로 적립했는지, 그리고 적립한 돈을 얼마나 꺼내 썼는지 확인합니다. 조례대로 안 했다면 위법이므로 시정요구 대상입니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 5년간 조례상 적립 의무액, 실제 적립액, 일반회계 전출(사용)액, 연말 잔액 — 재정안정화계정과 통합계정을 분리하여</li>
+    <li>통합계정에서 일반회계로 빌린 금액, 상환 계획, 이자</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>조례상 2025년 적립 의무액은 ○○억인데 실제 적립은 ○○억입니다. 차액 ○○억은 왜 적립하지 않았습니까? 조례 위반 아닙니까?</span></p>
+    <p class="me"><span class="who">위원</span><span>그리고 통합계정에서 일반회계가 빌린 ○○억은 갚아야 하는 돈입니다. 상환 일정과 이자 부담을 연도별로 제출해 주십시오. 기금 총액에서 이 통합계정 금액은 다른 기금 돈이 옮겨 온 것이라 이중 계산이라는 점도 도민께 정확히 설명되어야 합니다.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result"><strong>시정요구</strong>: 「경기도 통합재정안정화기금 조례」상 적립 의무를 이행하지 않은 금액을 적립하고, 향후 적립 의무를 준수할 것. <span class="meta">(조례명·조항은 원문 확인 후 기재)</span></p>
+  </div>
+</div>
+
+<!-- 12 -->
+<div class="script">
+  <div class="hd"><h3>12. 공직기강과 비위 재발 방지</h3><span class="stamp s-amber">처리</span><span class="meta">감사관실·인사 부서</span></div>
+  <div class="bd">
+  <h4>왜 보나</h4>
+  <p>성비위, 품위손상, 공금 횡령은 매년 반복됩니다. 같은 자료를 연도만 바꿔 매년 요구하면 추세와 대책의 효과를 볼 수 있습니다.</p>
+  <h4>자료요구</h4>
+  <div class="req"><ol>
+    <li>최근 3년 비위 유형별(성비위·음주·금품·횡령·품위손상 등) 징계 현황, 징계 수위, 소속 기관(산하 공공기관 포함)</li>
+    <li>법령 위반으로 인한 교부세 감액 내역</li>
+    <li>회계 담당 순환 근무, 이중 결재 등 횡령 방지 장치 운영 실태</li>
+  </ol></div>
+  <h4>질의 대본</h4>
+  <div class="dlg">
+    <p class="me"><span class="who">위원</span><span>최근 3년 횡령 사건이 ○○건, ○○억입니다. 그중 ○○건은 한 사람이 회계 업무를 ○년 이상 혼자 맡은 경우였습니다. 회계 담당 순환 근무 원칙은 지켜지고 있습니까? 산하기관까지 같은 기준이 적용됩니까?</span></p>
+    <p class="me"><span class="who">위원</span><span>성비위 징계 중 견책·감봉 같은 경징계가 ○○%입니다. 징계 기준이 적정한지 다른 시도와 비교한 자료를 제출해 주십시오.</span></p>
+  </div>
+  <h4>결과보고서 반영</h4>
+  <p class="result am"><strong>처리요구</strong>: 도 및 산하 공공기관의 회계 담당자 장기 근무를 해소하고, 비위 유형별 재발 방지 대책을 수립하여 보고할 것.</p>
+  </div>
+</div>
+
+<!-- ───────── 9 ───────── -->
+<h2 id="skill">질의 기술: 감사장에서 이기는 법</h2>
+
+<h3>육하원칙으로 묻는다</h3>
+<p>쌓인 자료를 가지고 <strong>누가, 언제, 어디서, 무엇을, 어떻게, 왜</strong>를 차례로 묻습니다. 특히 "누가 결정했는가"와 "언제까지 고칠 것인가"를 꼭 확인하세요.</p>
+
+<h3>답을 아는 질문만 한다</h3>
+<p>"몇 건입니까?"라고 묻는 순간 의원은 이미 숫자를 알고 있어야 합니다. 집행부가 "조금"이라고 얼버무리면 "제출하신 자료에는 ○○건으로 되어 있습니다"라고 바로 받아칠 수 있어야 합니다.</p>
+
+<h3>입체적으로 보여 준다</h3>
+<p>국회는 질의 시간이 짧아(기본 7분 + 보충 3분 + 마무리 1분) 퍼포먼스를 많이 합니다. 낙동강 생태 파괴를 보여 주려고 보좌진이 뉴트리아를 보름간 키워 국감장에 들고 나온 사례도 있습니다. 극단적일 필요는 없지만 <strong>사진, 동영상, PPT, 전후 비교 판넬, 실물</strong>은 큰 도움이 됩니다. 노후 아파트 재건축 문제를 질의하며 녹슨 옛 수도관을 잘라 와 보여 준 서울시의원 사례처럼, 주민 민원은 인터뷰·사진을 준비하세요.</p>
+
+<h3>감사장은 수확하는 자리</h3>
+<p>감사장에서 길게 토론하는 의원이 있는데, 토론은 평소에 하는 것입니다. 감사장은 가마니에 쌀이 차면 묶어서 던져 놓고 새 가마니를 대는 곳입니다. 질문 → 확인 → 요구 → 다음 질문으로 빠르게 넘어가세요.</p>
+
+<h3>"검토하겠습니다"를 받아치는 문장</h3>
+<div class="tbl"><table>
+  <thead><tr><th>집행부 답변</th><th>받아치기</th></tr></thead>
+  <tbody>
+    <tr><td>"적극 검토하겠습니다."</td><td>"언제까지, 누가, 얼마의 예산으로 하실지 서면으로 제출해 주십시오."</td></tr>
+    <tr><td>"자료를 나중에 드리겠습니다."</td><td>"감사 기간 중 ○일까지 제출해 주시고, 제출 전까지 이 질의는 보류하겠습니다."</td></tr>
+    <tr><td>"전임자 때 일이라 잘 모릅니다."</td><td>"행감 지적은 담당자가 바뀌어도 기관이 이행해야 합니다. 기관의 입장을 말씀해 주십시오."</td></tr>
+    <tr><td>"예산이 부족해서…"</td><td>"그렇다면 내년 예산 요구에 얼마를 반영하셨습니까? 반영 안 했다면 우선순위가 낮다는 뜻입니까?"</td></tr>
+    <tr><td>"다른 시도도 마찬가지입니다."</td><td>"서울(또는 ○○도)은 이렇게 개선했습니다. 자료를 드릴 테니 비교 검토해 제출해 주십시오."</td></tr>
+  </tbody>
+</table></div>
+
+<h3>7분 질의 시간 배분 예시</h3>
+<div class="tbl"><table>
+  <thead><tr><th>시간</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0:00–0:30</td><td>주제 제시: "○○사업의 집행 부진에 대해 묻겠습니다."</td></tr>
+    <tr><td class="num">0:30–2:30</td><td>사실 확인: 자료의 숫자를 하나씩 확인(예/아니오로 답할 질문)</td></tr>
+    <tr><td class="num">2:30–5:00</td><td>문제 제기: 비교(3년 추이, 다른 시도, 31개 시군), 원인 질문</td></tr>
+    <tr><td class="num">5:00–6:30</td><td>대안 제시와 요구: 구체적 개선 방향, 기한</td></tr>
+    <tr><td class="num">6:30–7:00</td><td>정리: "서면으로 ○일까지 제출해 주시고, 결과보고서에 반영하겠습니다."</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ───────── 10 ───────── -->
+<h2 id="after">행감 이후: 성과를 굳히는 4단계</h2>
+<ol class="steps">
+  <li><div><strong>결과보고서에 정확히 올린다.</strong> 내 지적이 시정·처리·건의 중 어디에 들어가는지 전문위원실과 확인합니다. 시정·처리로 올라가야 강제력이 생깁니다.</div></li>
+  <li><div><strong>본예산 심사로 연결한다.</strong> 행감에서 찾은 집행 부진·불용·중복 사업은 삭감 근거로, 현장에서 본 꼭 필요한 소규모 사업은 증액 근거로 씁니다. 예산은 정치이고 정책입니다. 의원은 편성권이 없지만 심사·의결 과정에서 주민의 요구를 담아야 합니다.</div></li>
+  <li><div><strong>보도자료를 낸다.</strong> 국회의원은 국감 전·중·후에 보도자료를 쏟아냅니다. 1인당 행감 전 사전 자료, 감사 기간 중, 감사 후를 합쳐 <strong>5~10꼭지</strong>를 목표로 하세요. 평소 의정활동 자료가 쌓여 있으면 쉽게 만들 수 있습니다.</div></li>
+  <li><div><strong>조례로 제도화하고, 다음 해 이행을 확인한다.</strong> 제도 문제(외부 회계감사, 적립 기준, 공유재산 기준 등)는 조례 개정안으로 발의합니다. 이듬해 시정·처리 결과 보고서가 오면 실제 이행 여부를 확인하고, 안 됐으면 다음 행감 첫 질문으로 삼습니다.</div></li>
+</ol>
+<div class="note"><b>포기하지 않으면 바뀐다: 강사의 사례</b>서울시는 16개 시도 중 유일하게 거주지 제한 없이 공무원을 뽑아 경기도민 합격자가 서울 거주자보다 많았고, 시험일도 다른 시도와 달라 중복 응시와 결시율(약 40%)로 예산이 낭비됐습니다. 강사가 4년간 행감에서 계속 지적했지만 거주지 제한은 끝내 공무원들이 반대했습니다. 그래서 대안 두 가지(지역 할당, 시험일 통일)를 제시했고, 결국 <strong>시험일 통일</strong>을 관철했습니다. 원안이 안 되면 대안으로 한 걸음이라도 바꾸는 것이 성과입니다.</div>
+
+<!-- ───────── 11 ───────── -->
+<h2 id="dont">절대 하지 말 것</h2>
+<div class="do-dont">
+  <div><h4><span class="stamp s-red">이해충돌</span></h4><p>내가 몸담았던 단체에만 예산을 더 주라고 하면 안 됩니다. "체육단체 전체가 몇 곳이고, 각각 회원 수와 예산이 얼마인지" 전체를 묻고 형평성으로 접근해야 합니다.</p></div>
+  <div><h4><span class="stamp s-red">속기록 삭제 요구</span></h4><p>속기록은 지울 수 없습니다. 이해충돌 발언이 문제가 되자 사무처에 부탁해 속기록을 지운 의원 사례가 있는데, 이는 불법입니다. 의원의 말은 100년, 1,000년 남습니다.</p></div>
+  <div><h4><span class="stamp s-red">고성·막말·물건 던지기</span></h4><p>중계되고 기록됩니다. 노조 현수막, 당 민원, 공천 불이익으로 이어진 실제 사례가 있습니다.</p></div>
+  <div><h4><span class="stamp s-red">보지도 않을 자료 폭탄</span></h4><p>필요 없는 대량 자료요구는 공무원 노조의 반발을 부르고 의회 신뢰를 떨어뜨립니다. 정확하게, 표로, 필요한 만큼.</p></div>
+  <div><h4><span class="stamp s-red">여야 싸움으로 파행</span></h4><p>감사 시간은 정해져 있습니다. 파행은 집행부만 웃게 만듭니다.</p></div>
+  <div><h4><span class="stamp s-red">근거 없는 질의</span></h4><p>"글쎄요", "나중에 드리겠습니다"로 끝나는 질의는 감사가 아닙니다. 자료 없이 들어가지 마세요.</p></div>
+</div>
+<div class="warn"><b>로비와 유착을 경계하세요</b>퇴직 공무원이 관련 업체로 가고, 그들이 친분을 이용해 의원에게도 로비하는 일이 많습니다. 교통·도시안전처럼 이해관계가 큰 위원회일수록 조심해야 합니다. 의원은 수사·정보기관의 관찰 대상이기도 합니다.</div>
+
+<!-- ───────── 12 ───────── -->
+<h2 id="gloss">용어 풀이 사전</h2>
+<p>강의에 나온 어려운 말을 가나다순으로 풀었습니다.</p>
+<dl class="gloss">
+  <div><dt>감사결과보고서</dt><dd>행감이 끝나고 위원회가 채택하는 보고서. 시정요구·처리요구·건의사항으로 나뉜다.</dd></div>
+  <div><dt>건의사항</dt><dd>강제력은 약하고 "검토해 보라"는 아이디어 제공 수준의 요구.</dd></div>
+  <div><dt>계수조정</dt><dd>예산결산특별위원회가 심사 막바지에 항목별로 깎고 늘리는 숫자를 최종 맞추는 과정. 소수의 계수조정위원이 집행부와 협의한다.</dd></div>
+  <div><dt>교부세 감액</dt><dd>지자체가 법령을 위반해 돈을 쓰거나 걷어야 할 돈을 안 걷으면 국가가 다음 해 교부세를 깎는 제재.</dd></div>
+  <div><dt>내부거래</dt><dd>일반회계·특별회계·기금 사이에 돈을 주고받는 것. 실제 새 돈이 아닌데 예산 규모를 키운다. <em>경기도 약 4.36%, 서울 약 0.8%(강의 자료)</em></dd></div>
+  <div><dt>민간위탁</dt><dd>도의 사무(시설 운영 등)를 민간 법인·단체에 맡기는 것. 예산과목 307-05(민간위탁금), 402-03(민간위탁사업비).</dd></div>
+  <div><dt>민간투자사업 (BTL·BTO·BOT)</dt><dd>민간 돈으로 시설을 짓는 방식. <strong>BTL</strong>: 지어서 소유권을 넘기고 정부가 임대료를 줌(학교, 하수관). <strong>BTO</strong>: 지어서 소유권은 넘기고 운영권으로 이용료를 받음(지하철 9호선, 우면산터널, 일산대교). <strong>BOT</strong>: 민간이 소유·운영하다 20~30년 뒤 넘김. <em>결국 모두 미래에 갚아야 할 부담이다.</em></dd></div>
+  <div><dt>법정전출금</dt><dd>법에 따라 도가 교육청 등에 반드시 넘겨야 하는 돈(지방교육세 전액, 담배소비세 일부, 시도세 일부 등).</dd></div>
+  <div><dt>보전수입 등</dt><dd>작년에서 넘어온 돈(순세계잉여금, 이월금), 융자금 회수 등. 집행부가 크기를 조절하기 쉽다.</dd></div>
+  <div><dt>보조금(국고보조금)</dt><dd>국가 사업을 하라고 국가가 주는 돈. 보통 도·시군이 일정 비율을 맞춰 넣어야(매칭) 해서, 늘어날수록 자체 재원이 묶인다.</dd></div>
+  <div><dt>보통교부세·특별교부세</dt><dd>지방교부세 4종(보통·특별·부동산·소방안전) 중 일부. <strong>보통교부세</strong>는 내국세의 19.24%를 재원으로 재정 부족 지자체에 나눠 주며, 경기도 본청은 받지 못한다. <strong>특별교부세</strong>는 특별한 사정(재해·현안)에 주는 돈.</dd></div>
+  <div><dt>분식회계</dt><dd>장부를 꾸며 실제보다 좋아 보이게 하는 것. 지자체에서는 생기지도 않은 잉여금을 미리 세입으로 잡아 예산을 부풀리는 방식이 쓰인다.</dd></div>
+  <div><dt>불용액</dt><dd>예산을 받아 놓고 쓰지 않아 남은 돈. 아무 일이 없어 안 쓴 "착한 불용"과 사업을 못 해서 남은 "나쁜 불용"이 있다.</dd></div>
+  <div><dt>설계변경</dt><dd>공사 도중 설계를 바꾸는 것. 원칙적으로 없어야 하며, 반복되면 공사비 증액·업체 특혜 의심 대상.</dd></div>
+  <div><dt>성과지표</dt><dd>사업이 효과를 냈는지 재는 잣대. 예산서에는 성과계획서, 결산서에는 성과보고서로 붙는다.</dd></div>
+  <div><dt>세수진도율</dt><dd>1년 세입 목표 중 지금까지 실제로 걷힌 비율. 월별로 확인해 세수 펑크를 미리 안다.</dd></div>
+  <div><dt>세수오차비율</dt><dd>예산에 잡은 세입과 실제 걷힌 세입의 차이 비율. 클수록 예산을 부정확하게 짰다는 뜻.</dd></div>
+  <div><dt>수의계약</dt><dd>경쟁입찰 없이 특정 업체와 바로 맺는 계약. 일정 금액 이하나 긴급한 경우에 허용되며, 쏠림·분할계약이 단골 지적 사항.</dd></div>
+  <div><dt>순세계잉여금</dt><dd>1년 살림을 다 살고, 다음 해로 넘길 돈(이월금)과 국고에 돌려줄 돈까지 뺀 뒤 순수하게 남은 돈.</dd></div>
+  <div><dt>시정요구</dt><dd>법령·조례 위반에 대한 "바로잡아라" 요구. 강제 이행 대상.</dd></div>
+  <div><dt>실링(한도)</dt><dd>예산 심사에서 의원별·분야별로 미리 정한 증액 가능 한도. 서울시의회는 예결위원 1인당 지역구 사업 한도를 두는 관행이 있다.</dd></div>
+  <div><dt>양입제출·양출제입</dt><dd>지방은 들어올 돈을 먼저 헤아리고 지출을 정하는 <strong>양입제출</strong>, 국가는 쓸 돈을 먼저 정하고 세입을 맞추는 <strong>양출제입</strong>이 원칙이다.</dd></div>
+  <div><dt>예비비</dt><dd>예측 못 한 지출에 대비해 일반회계의 1% 범위에서 편성하는 돈.</dd></div>
+  <div><dt>예수금·예탁금·예치금</dt><dd>회계 사이의 돈 거래. <strong>예수금</strong>: 다른 회계에서 빌려 온 돈. <strong>예탁금</strong>: 다른 회계(통합계정 등)에 맡긴 돈, 찾아오면 예탁금 회수. <strong>예치금</strong>: 은행에 맡긴 돈, 찾아오면 예치금 회수.</dd></div>
+  <div><dt>위법·불법</dt><dd>위법은 법을 어긴 것, 불법은 처벌 조항까지 있는 위반.</dd></div>
+  <div><dt>재정분석</dt><dd>행정안전부가 결산 후 지자체 재정의 건전성·효율성·계획성을 평가해 매기는 성적표. 지표별로 유형 평균과 비교한다.</dd></div>
+  <div><dt>재정자립도</dt><dd>전체 재원 중 자체수입(지방세+세외수입) 비율. 교부세를 더 받으면 오히려 떨어지는 등 "산수"로 움직인다.</dd></div>
+  <div><dt>재정자주도</dt><dd>전체 재원 중 지자체가 용도를 자율로 정해 쓸 수 있는 돈의 비율. 실제 살림의 여유를 더 잘 보여 준다.</dd></div>
+  <div><dt>재정주의·재정위기단체</dt><dd>예산 대비 채무비율 25% 초과 시 주의, 40% 초과 시 위기 단체로 지정되어 정부의 재정 관리를 받는다.</dd></div>
+  <div><dt>조정교부금</dt><dd>도세의 일부(인구 50만 이상 시는 47%, 그 외 27%)를 시군에 나눠 주는 돈. <strong>일반</strong>(90%, 인구·면적 등 산식으로 배분)과 <strong>특별</strong>(10%, 도지사 재량)이 있다. 특별조정교부금은 단체장 간 친소 관계에 따라 달라질 만큼 정치적이다.</dd></div>
+  <div><dt>준예산</dt><dd>새해가 될 때까지 예산이 의결되지 않으면 인건비·필수 운영비 등을 전년도 기준으로 집행하는 제도(지방자치법 제146조). 미국식 셧다운은 없지만 신규 사업은 멈춘다.</dd></div>
+  <div><dt>증인·참고인</dt><dd>증인은 거짓 증언 시 고발될 수 있고, 참고인은 법적 책임 없이 의견을 듣는 사람.</dd></div>
+  <div><dt>지방소비세</dt><dd>국세인 부가가치세의 일정 비율(현재 25.3%)을 지방에 떼어 주는 세금.</dd></div>
+  <div><dt>지역상생발전기금</dt><dd>지방소비세 신설로 수도권이 더 이득을 본다는 이유로 서울·경기·인천이 지방소비세의 일부를 출연하는 기금. 경기도는 연 약 3,700억 원 출연, 2029년까지 연장(강의 자료).</dd></div>
+  <div><dt>집행률</dt><dd>배정된 예산 중 실제로 쓴 비율.</dd></div>
+  <div><dt>집행잔액</dt><dd>쓰려고 했으나 낙찰 차액, 사업 지연·취소 등으로 남은 돈.</dd></div>
+  <div><dt>차환채</dt><dd>기존 빚을 갚기 위해 새로 내는 빚(고금리 → 저금리 갈아타기 등). 발행 한도에 잡히지 않아 예산 규모를 부풀리는 데 쓰이기도 한다.</dd></div>
+  <div><dt>채무·부채</dt><dd><strong>채무</strong>: 지금 이자가 나가고 갚아야 할 돈(지방채 등). <strong>부채</strong>: 언젠가 갚아야 할 모든 의무(임대보증금, 퇴직급여충당부채 포함).</dd></div>
+  <div><dt>처리요구</dt><dd>위법은 아니나 불합리·부당한 것에 대한 "고쳐라" 요구. 강제 이행 대상.</dd></div>
+  <div><dt>초과세입</dt><dd>예산에 잡은 것보다 더 걷힌 세입. △(마이너스)이면 덜 걷힌 것, 즉 세입을 부풀린 것.</dd></div>
+  <div><dt>통합부채·통합채무</dt><dd>본청뿐 아니라 산하 공사·공단·출연기관까지 합친 빚. 본청 빚을 산하기관에 떠넘기는 것을 잡아낸다.</dd></div>
+  <div><dt>통합재정안정화기금</dt><dd>재정안정화계정(비상금 적금, 꺼내 써도 안 갚음)과 통합계정(다른 기금 여유자금을 모은 저수지, 빌려 쓰면 이자와 함께 갚음)으로 이뤄진 기금.</dd></div>
+  <div><dt>투자심사</dt><dd>대형 신규 사업을 하기 전 타당성을 심사하는 절차. 일정 규모(강의: 300억) 이상은 중앙정부 심사를 받아야 해서, 기준 아래로 쪼개는 편법을 경계해야 한다.</dd></div>
+  <div><dt>특별회계·기금</dt><dd>특정 목적의 돈을 따로 관리하는 주머니. 너무 많으면 돈이 묶여 비효율적이라 정부는 통폐합을 요구한다.</dd></div>
+</dl>
+
+<!-- ───────── 13 ───────── -->
+<h2 id="checklist">준비 체크리스트</h2>
+<p class="meta">체크 표시는 이 화면에서만 기억됩니다.</p>
+<div id="checks">
+<p class="phase">감사 2달 전</p>
+<ul class="check">
+  <li><input type="checkbox" id="c1"><label for="c1">이번 행감 "꼭 바꿀 주제" 1~2개 정하기(선택과 집중)</label></li>
+  <li><input type="checkbox" id="c2"><label for="c2">소관 부서 전체 목록 만들고 부서마다 최소 1개 주제 배정</label></li>
+  <li><input type="checkbox" id="c3"><label for="c3">작년 행감 시정·처리 요구 이행 결과 확인(미이행 건 표시)</label></li>
+  <li><input type="checkbox" id="c4"><label for="c4">지역 민원 중 "도 전체 기준 문제"로 바꿀 수 있는 것 고르기</label></li>
+  <li><input type="checkbox" id="c5"><label for="c5">같은 당 위원들과 주제 분담·팀플레이 협의</label></li>
+</ul>
+<p class="phase">감사 6~4주 전</p>
+<ul class="check">
+  <li><input type="checkbox" id="c6"><label for="c6">자료요구서 작성: 3년 치, 표 양식, 엑셀, 원본대조필, "문제점 및 개선대책 서술" 포함</label></li>
+  <li><input type="checkbox" id="c7"><label for="c7">기본 세트 요구: 계획서·평가보고서·용역보고서·위원회 회의록·설계변경·수의계약·민간위탁·불용</label></li>
+  <li><input type="checkbox" id="c8"><label for="c8">전문위원실 공통 자료목록과 겹치지 않는지 확인</label></li>
+</ul>
+<p class="phase">감사 3~1주 전</p>
+<ul class="check">
+  <li><input type="checkbox" id="c9"><label for="c9">도착 자료 분석: 정렬해서 꼴찌·급증·반복·0% 찾기</label></li>
+  <li><input type="checkbox" id="c10"><label for="c10">인용할 숫자를 결산서·지방재정365로 재확인</label></li>
+  <li><input type="checkbox" id="c11"><label for="c11">질의 대본 작성(7분 배분), 예상 답변과 받아치기 준비</label></li>
+  <li><input type="checkbox" id="c12"><label for="c12">사진·영상·PPT·판넬 등 시각 자료 준비</label></li>
+  <li><input type="checkbox" id="c13"><label for="c13">필요 시 증인·참고인 채택 위원회 협의</label></li>
+  <li><input type="checkbox" id="c14"><label for="c14">사전 보도자료 1~2꼭지 준비</label></li>
+</ul>
+<p class="phase">감사 당일</p>
+<ul class="check">
+  <li><input type="checkbox" id="c15"><label for="c15">숫자로 시작, 요구로 끝내기("언제까지, 서면으로")</label></li>
+  <li><input type="checkbox" id="c16"><label for="c16">미제출 자료는 기한을 정해 다시 요구</label></li>
+  <li><input type="checkbox" id="c17"><label for="c17">화가 나면 잠시 퇴장, 이해충돌 발언 금지</label></li>
+</ul>
+<p class="phase">감사 후</p>
+<ul class="check">
+  <li><input type="checkbox" id="c18"><label for="c18">내 지적이 결과보고서에 시정·처리로 들어갔는지 확인</label></li>
+  <li><input type="checkbox" id="c19"><label for="c19">본예산 심사에 삭감·증액 근거로 연결</label></li>
+  <li><input type="checkbox" id="c20"><label for="c20">사후 보도자료, 지역 의정보고</label></li>
+  <li><input type="checkbox" id="c21"><label for="c21">제도 개선 사항 조례 개정안 준비</label></li>
+  <li><input type="checkbox" id="c22"><label for="c22">자료를 주제별로 파일링(내년 행감 재료)</label></li>
+</ul>
+</div>
+
+<footer>
+  <p>출처: 박성용 강사 행정사무감사 강의 녹취(2026. 9. 17., 클로바노트 자동 받아쓰기 3편)를 바탕으로 재구성. 강의에 나온 서울시·타 지자체 사례는 경기도 행감에 응용할 수 있도록 정리했으며, 강사 개인의 정치적 평가는 제외했습니다. 법 조항·수치는 감사 전 원문과 최신 자료로 확인하시기 바랍니다.</p>
+  <p>참고 사이트: 지방재정365 lofin365.go.kr · 국가법령정보센터 law.go.kr · 자치법규정보시스템 elis.go.kr · 경기도의회 회의록 검색</p>
+</footer>
+</article>
+</main>
+</div>
+
+<script>
+(function(){
+  var KEY='haenggam-checks';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll('#checks input[type=checkbox]');
+  boxes.forEach(function(b){
+    if(saved[b.id]) b.checked=true;
+    b.addEventListener('change',function(){
+      saved[b.id]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+    });
+  });
+})();
+</script>
