@@ -473,6 +473,123 @@ def frame(gt):
     return cur.convert("RGB")
 
 # ---------------------------------------------------------------- audio
+def dance_music(n, rng):
+    """직접 작곡한 K팝 댄스풍 곡 (128BPM, F-G-Em-Am). 3.4초(두 번째 장면)에 드롭."""
+    out = np.zeros(n)
+    bpm = 128
+    beat = 60 / bpm
+    bar = beat * 4
+    off = 3.4 - 2 * bar
+    mtof = lambda m: 440 * 2 ** ((m - 69) / 12)
+
+    def add(sig, at, gain=1.0):
+        i = int(at * SR)
+        if i < 0:
+            sig, i = sig[-i:], 0
+        if i >= n:
+            return
+        j = min(n, i + len(sig))
+        out[i:j] += sig[: j - i] * gain
+
+    def tt(sec):
+        return np.arange(int(sec * SR)) / SR
+
+    def saw(f, x, maxh=24):
+        k = int(min(maxh, 9000 / f))
+        return sum(np.sin(2 * np.pi * h * f * x) / h for h in range(1, k + 1))
+
+    x = tt(0.4)
+    kick = np.sin(2 * np.pi * np.cumsum(48 + 140 * np.exp(-x * 40)) / SR) * np.exp(-x * 7)
+    x = tt(0.25)
+    clap = sosfilt(butter(2, [900, 4000], "bp", fs=SR, output="sos"), rng.standard_normal(len(x)))
+    clap *= (np.exp(-x * 30) + 0.6 * np.exp(-np.maximum(0, x - 0.012) * 30) * (x > 0.012))
+    x = tt(0.18)
+    ohat = sosfilt(butter(4, 8000, "hp", fs=SR, output="sos"), rng.standard_normal(len(x))) * np.exp(-x * 18)
+    x = tt(0.05)
+    chat = sosfilt(butter(4, 9000, "hp", fs=SR, output="sos"), rng.standard_normal(len(x))) * np.exp(-x * 80)
+
+    chords = [(41, [65, 69, 72]), (43, [67, 71, 74]), (40, [64, 67, 71]), (45, [64, 69, 72])]  # F G Em Am
+    hook = [
+        [(0, 81, 2), (3, 84, 1), (4, 81, 2), (6, 79, 2), (10, 77, 2), (12, 79, 3)],
+        [(0, 79, 2), (3, 83, 1), (4, 79, 2), (6, 77, 2), (8, 76, 4), (12, 74, 3)],
+        [(0, 79, 2), (3, 83, 1), (4, 79, 2), (6, 76, 2), (10, 74, 2), (12, 76, 3)],
+        [(0, 76, 2), (2, 77, 2), (4, 79, 2), (6, 81, 4), (12, 84, 2), (14, 81, 2)],
+    ]
+    nbars = int((n / SR - off) / bar) + 1
+    # 구간: 0-1 인트로 / 2-9 드롭A / 10-11 빌드업 / 12-18 드롭B / 19- 아웃트로
+    def part(b):
+        return "intro" if b < 2 else "drop" if b < 10 else "build" if b < 12 else "drop" if b < 19 else "outro"
+
+    chord_bus = np.zeros(n)
+    bass_bus = np.zeros(n)
+    lp_chords = butter(2, 3200, "lp", fs=SR, output="sos")
+    for b in range(nbars):
+        at = off + b * bar
+        pt = part(b)
+        root, notes = chords[b % 4]
+        x = tt(bar)
+        # 화음 (디튠 톱니파 3겹)
+        pad = sum(saw(mtof(m) * d, x) for m in notes for d in (0.997, 1.0, 1.003))
+        pad *= np.minimum(1, x / 0.02) * np.minimum(1, (bar - x) / 0.03)
+        if pt in ("intro", "build"):
+            cut = 900 if pt == "intro" else 600 + 2400 * ((b - 10) / 2)
+            pad = sosfilt(butter(2, cut, "lp", fs=SR, output="sos"), pad)
+        else:
+            pad = sosfilt(lp_chords, pad)
+        i = int(at * SR)
+        if 0 <= i < n:
+            j = min(n, i + len(pad))
+            chord_bus[i:j] += pad[: j - i] * (0.6 if pt == "outro" else 1.0)
+        for q in range(4):
+            bt = at + q * beat
+            if pt == "drop" or (pt == "intro" and q in (0, 2)) or (pt == "outro" and b == 19 and q == 0):
+                add(kick, bt, 1.0)
+            if pt == "drop":
+                if q in (1, 3):
+                    add(clap, bt, 0.55)
+                add(ohat, bt + beat / 2, 0.22)
+                add(chat, bt, 0.12)
+                add(chat, bt + beat * 0.75, 0.08)
+            if pt in ("drop", "build"):
+                # 오프비트 베이스 (하우스 스타일)
+                y = tt(beat / 2)
+                f = mtof(root - 12)
+                bs = sosfilt(butter(2, 700, "lp", fs=SR, output="sos"), saw(f, y, 10) + 0.8 * np.sin(2 * np.pi * f * y))
+                bs *= np.minimum(1, y / 0.005) * np.exp(-y * 4)
+                k = int((bt + beat / 2) * SR)
+                if 0 <= k < n:
+                    m = min(n, k + len(bs))
+                    bass_bus[k:m] += bs[: m - k]
+        # 빌드업: 점점 빨라지는 박수 + 상승음
+        if (pt == "build" and b == 11) or (pt == "intro" and b == 1):
+            steps = [0, 4, 8, 10, 12, 13, 14, 15] if pt == "intro" else list(range(0, 8, 2)) + list(range(8, 16))
+            for st in steps:
+                add(clap, at + st * beat / 4, 0.25 + 0.35 * st / 16)
+            y = tt(bar)
+            riser = sosfilt(butter(2, 2000, "hp", fs=SR, output="sos"), rng.standard_normal(len(y))) * (y / bar) ** 2
+            riser += np.sin(2 * np.pi * np.cumsum(300 + 900 * (y / bar) ** 2) / SR) * (y / bar) ** 2 * 0.3
+            add(riser, at, 0.35)
+        # 리드 훅
+        if pt in ("drop", "build", "outro") and not (pt == "drop" and b in (2, 3, 12, 13)):
+            for st, m, ln in hook[b % 4]:
+                y = tt(ln * beat / 4 + 0.08)
+                f = mtof(m)
+                ld = saw(f, y, 12) * 0.6 + np.sin(2 * np.pi * f * 2 * y) * 0.2
+                ld *= np.minimum(1, y / 0.004) * np.exp(-y * 3) * np.minimum(1, (len(y) / SR - y) / 0.03)
+                ld = sosfilt(butter(2, 5000, "lp", fs=SR, output="sos"), ld)
+                g = {"drop": 0.15, "build": 0.09, "outro": 0.1}[pt]
+                add(ld, at + st * beat / 4, g)
+                add(ld, at + st * beat / 4 + beat * 0.75, g * 0.3)  # 메아리
+    # 사이드체인 펌핑 (킥에 맞춰 화음·베이스가 숨 쉼)
+    t = np.arange(n) / SR
+    ph = np.mod(t - off, beat)
+    pump = 1 - 0.65 * np.exp(-ph * 14)
+    bar_idx = np.floor((t - off) / bar).astype(int)
+    is_drop = np.isin(bar_idx, list(range(2, 10)) + list(range(12, 19)))
+    pump = np.where(is_drop, pump, 1.0)
+    out += chord_bus * pump * 0.05 + bass_bus * pump * 0.3
+    return out
+
 def make_audio(path):
     n = int(TOTAL * SR)
     t = np.arange(n) / SR
@@ -543,6 +660,8 @@ def make_audio(path):
         if i < n:
             pad[i:j] += s[: j - i]
     mix += sosfilt(butter(2, 1800, "lp", fs=SR, output="sos"), pad) * 0.045
+    if os.environ.get("STYLE") == "dance":
+        mix = dance_music(n, rng) * 0.9
     mix *= float(os.environ.get("MUSIC", "1"))  # MUSIC=0 이면 효과음만 (앱에서 음악을 따로 넣을 때)
 
     # 효과음
@@ -576,7 +695,7 @@ def make_audio(path):
     for s in STARTS[1:-1]:
         add(whoosh(), s - 0.12, 0.5)
     for st in SLAMS:
-        add(thud(), st + 0.1, 0.55)
+        add(thud(), st + 0.1, 0.3 if os.environ.get("STYLE") == "dance" else 0.55)
     S = STARTS
     for at in (S[0] + 1.15, S[0] + 1.5, S[2] + 2.1, S[3] + 0.3, S[4] + 1.6, S[4] + 2.05, S[6] + 0.6,
                S[6] + 1.9, S[7] + 1.0, S[7] + 1.5):
