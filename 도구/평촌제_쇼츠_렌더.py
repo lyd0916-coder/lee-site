@@ -466,6 +466,8 @@ def frame(gt):
         bg = Image.new("RGBA", (W, H), NAVY + (255,))
         bg.paste(cur, (int(dx), int(dy)))
         cur = bg
+    if os.environ.get("STYLE") == "song":
+        draw_lyrics(cur, gt)
     # 시작 페이드인, 끝 페이드아웃
     fade = min(clamp(gt / 0.25), clamp((TOTAL - gt) / 0.6))
     if fade < 1:
@@ -473,6 +475,140 @@ def frame(gt):
     return cur.convert("RGB")
 
 # ---------------------------------------------------------------- audio
+# ---------------------------------------------------------------- 응원송 「우리들의 Festival」
+# 마디(bar), 16분음표 위치(step), 길이(step), 음높이(MIDI), 가사 음절
+SONG_BPM = 128
+SONG_BEAT = 60 / SONG_BPM
+SONG_BAR = SONG_BEAT * 4
+SONG_OFF = 3.4 - 2 * SONG_BAR
+
+def _line(text, notes):
+    return {"text": text, "notes": notes}
+
+SONG = [
+    _line("평! 촌! 제!", [(None, 0.15, 2, 81, "평"), (None, 0.43, 2, 84, "촌"), (None, 0.71, 3, 81, "제")]),
+    _line("하나 둘 셋!", [(1, 4, 1, 76, "하"), (1, 5, 2, 76, "나"), (1, 8, 3, 79, "둘"), (1, 12, 3, 84, "셋")]),
+    _line("가을바람 타고 모인 우리", [(2, 0, 2, 69, "가"), (2, 2, 2, 69, "을"), (2, 4, 2, 67, "바"), (2, 6, 2, 65, "람"),
+          (2, 8, 2, 67, "타"), (2, 10, 4, 69, "고"), (3, 0, 2, 67, "모"), (3, 2, 2, 65, "인"), (3, 4, 2, 64, "우"), (3, 6, 6, 62, "리")]),
+    _line("천이백 개의 설렘이 반짝", [(4, 0, 2, 64, "천"), (4, 2, 2, 64, "이"), (4, 4, 2, 67, "백"), (4, 6, 2, 67, "개"),
+          (4, 8, 2, 71, "의"), (4, 10, 2, 72, "설"), (4, 12, 2, 71, "렘"), (4, 14, 2, 69, "이"), (5, 0, 3, 69, "반"), (5, 4, 8, 76, "짝")]),
+    _line("연습했던 동작 하나하나", [(6, 0, 2, 69, "연"), (6, 2, 2, 69, "습"), (6, 4, 2, 67, "했"), (6, 6, 2, 65, "던"),
+          (6, 8, 2, 67, "동"), (6, 10, 4, 69, "작"), (7, 0, 2, 67, "하"), (7, 2, 2, 65, "나"), (7, 4, 2, 64, "하"), (7, 6, 6, 62, "나")]),
+    _line("오늘은 무대 위에 펼쳐 봐", [(8, 0, 2, 64, "오"), (8, 2, 2, 64, "늘"), (8, 4, 2, 67, "은"), (8, 6, 2, 67, "무"),
+          (8, 8, 2, 71, "대"), (8, 10, 2, 72, "위"), (8, 12, 2, 74, "에"), (8, 14, 2, 76, "펼"), (9, 0, 3, 74, "쳐"), (9, 4, 8, 76, "봐")]),
+    _line("준비됐니? 소리 질러!", [(10, 0, 2, 72, "준"), (10, 2, 2, 72, "비"), (10, 4, 2, 74, "됐"), (10, 6, 2, 76, "니"),
+          (10, 8, 2, 77, "소"), (10, 10, 2, 77, "리"), (10, 12, 2, 79, "질"), (10, 14, 2, 79, "러")]),
+    _line("하나, 둘, 셋, 넷!", [(11, 0, 2, 72, "하"), (11, 2, 2, 72, "나"), (11, 4, 3, 74, "둘"), (11, 8, 3, 76, "셋"), (11, 12, 4, 79, "넷")]),
+    _line("평촌제! 평촌제! 우리들의 Festival!", [(12, 0, 2, 81, "평"), (12, 2, 2, 84, "촌"), (12, 4, 3, 81, "제"),
+          (12, 8, 2, 81, "평"), (12, 10, 2, 84, "촌"), (12, 12, 3, 81, "제"), (13, 0, 2, 79, "우"), (13, 2, 2, 79, "리"),
+          (13, 4, 2, 77, "들"), (13, 6, 2, 76, "의"), (13, 8, 2, 79, "Fes"), (13, 10, 2, 81, "ti"), (13, 12, 4, 84, "val")]),
+    _line("평촌중 평촌중 함께라서 빛나", [(14, 0, 2, 79, "평"), (14, 2, 2, 83, "촌"), (14, 4, 3, 79, "중"),
+          (14, 8, 2, 79, "평"), (14, 10, 2, 83, "촌"), (14, 12, 3, 79, "중"), (15, 0, 2, 76, "함"), (15, 2, 2, 76, "께"),
+          (15, 4, 2, 77, "라"), (15, 6, 2, 79, "서"), (15, 8, 3, 81, "빛"), (15, 12, 4, 76, "나")]),
+    _line("떨려도 괜찮아 친구가 있잖아", [(16, 0, 2, 77, "떨"), (16, 2, 2, 77, "려"), (16, 4, 2, 79, "도"), (16, 6, 2, 81, "괜"),
+          (16, 8, 2, 81, "찮"), (16, 10, 4, 79, "아"), (17, 0, 2, 77, "친"), (17, 2, 2, 77, "구"), (17, 4, 2, 79, "가"),
+          (17, 6, 2, 81, "있"), (17, 8, 2, 83, "잖"), (17, 10, 4, 84, "아")]),
+    _line("박수 소리 크게, 오늘을 기억해", [(18, 0, 1, 79, "박"), (18, 1, 1, 79, "수"), (18, 2, 1, 81, "소"), (18, 3, 1, 81, "리"),
+          (18, 4, 2, 83, "크"), (18, 6, 2, 84, "게"), (18, 8, 1, 83, "오"), (18, 9, 1, 81, "늘"), (18, 10, 2, 79, "을"),
+          (18, 12, 1, 81, "기"), (18, 13, 1, 79, "억"), (18, 14, 3, 76, "해")]),
+    _line("평촌! 평촌! 평촌제! 예~!", [(19, 0, 1, 81, "평"), (19, 1, 2, 84, "촌"), (19, 4, 1, 81, "평"), (19, 5, 2, 84, "촌"),
+          (19, 8, 1, 81, "평"), (19, 9, 1, 84, "촌"), (19, 10, 2, 81, "제"), (19, 13, 6, 88, "예")]),
+]
+
+def note_time(bar, step):
+    return step if bar is None else SONG_OFF + bar * SONG_BAR + step * SONG_BEAT / 4
+
+def song_notes():
+    """(시작초, 길이초, MIDI, 줄번호, 음절번호)"""
+    out = []
+    for li, ln in enumerate(SONG):
+        for si, (bar, step, length, midi, _) in enumerate(ln["notes"]):
+            out.append((note_time(bar, step), length * SONG_BEAT / 4, midi, li, si))
+    return out
+
+def lyric_windows():
+    notes = song_notes()
+    wins = []
+    for li, ln in enumerate(SONG):
+        ns = [n for n in notes if n[3] == li]
+        wins.append([ns[0][0] - 0.35, ns[-1][0] + ns[-1][1] + 0.3, ns])
+    for a, b in zip(wins, wins[1:]):
+        a[1] = min(a[1], b[0] - 0.02)
+    return wins
+
+LYRIC_WINS = lyric_windows()
+
+def syllable_spans(text):
+    """가사 줄에서 음절(공백·문장부호 제외)의 글자 위치 목록"""
+    spans, i = [], 0
+    for ln in SONG:
+        if ln["text"] == text:
+            for (_, _, _, _, syl) in ln["notes"]:
+                j = text.index(syl, i)
+                spans.append((j, j + len(syl)))
+                i = j + len(syl)
+    return spans
+
+def draw_lyrics(cv, gt):
+    for li, (a, b, ns) in enumerate(LYRIC_WINS):
+        if not (a <= gt < b):
+            continue
+        text = SONG[li]["text"]
+        size = 54
+        f = font(FONT_XB, size)
+        base = text_img(text, size, WHITE, 5, NAVY)
+        lit = text_img(text, size, YELLOW, 5, NAVY)
+        spans = syllable_spans(text)
+        # 진행 위치: 현재 부르는 음절까지 채움 (음절 안에서는 길이에 비례)
+        prog = 0.0
+        for (st, ln_, _, _, si), (c0, c1) in zip(ns, spans):
+            if gt >= st:
+                x0 = f.getlength(text[:c0])
+                x1 = f.getlength(text[:c1])
+                prog = x0 + (x1 - x0) * clamp((gt - st) / max(0.08, min(ln_, 0.25)))
+        pw, ph = base.width + 70, base.height + 34
+        fade = clamp((gt - a) / 0.15) * clamp((b - gt) / 0.15)
+        pill = Image.new("RGBA", (pw * 2, ph * 2), (0, 0, 0, 0))
+        ImageDraw.Draw(pill).rounded_rectangle((0, 0, pw * 2 - 1, ph * 2 - 1), ph, fill=NAVY + (190,))
+        pill = pill.resize((pw, ph), Image.LANCZOS)
+        pill.alpha_composite(base, (35, 17))
+        if prog > 0:
+            w = min(lit.width, int(prog) + 4)
+            pill.alpha_composite(lit.crop((0, 0, w, lit.height)), (35, 17))
+        note = icon("note", 56, YELLOW)
+        paste_center(cv, pill, W / 2, 190, 1.0, fade)
+        paste_center(cv, note, W / 2 - pw / 2 - 10, 160, 1.0, fade, math.sin(gt * 6) * 12)
+
+def vocal_track(n, rng):
+    """가사 멜로디를 노래하듯 부르는 신스 (모음 '아' 포먼트 + 비브라토, 후렴은 옥타브 합창)"""
+    out = np.zeros(n)
+    mtof = lambda m: 440 * 2 ** ((m - 69) / 12)
+    f1 = butter(2, [600, 1000], "bp", fs=SR, output="sos")
+    f2 = butter(2, [1000, 1500], "bp", fs=SR, output="sos")
+    f3 = butter(2, [2400, 3200], "bp", fs=SR, output="sos")
+    for (st, ln, midi, li, si) in song_notes():
+        chant = li in (0, 1, len(SONG) - 1)
+        dur = ln + 0.06
+        x = np.arange(int(dur * SR)) / SR
+        vib = 1 + 0.006 * np.sin(2 * np.pi * 5.5 * x) * np.minimum(1, x / 0.25)
+        voices = [(midi - 12, 1.0)] + ([(midi - 24, 0.6), (midi - 5, 0.35)] if li >= 8 or chant else [])
+        sig = np.zeros(len(x))
+        for m, g in voices:
+            f = mtof(m) * vib
+            ph = 2 * np.pi * np.cumsum(f) / SR
+            k = int(min(30, 8000 / mtof(m)))
+            src = sum(np.sin(h * ph) / h for h in range(1, k + 1))
+            sig += g * (sosfilt(f1, src) * 1.0 + sosfilt(f2, src) * 0.7 + sosfilt(f3, src) * 0.25 + src * 0.08)
+        envl = np.minimum(1, x / 0.015) * np.minimum(1, (dur - x) / 0.05)
+        if chant:
+            envl *= np.exp(-x * 5)
+        sig *= envl
+        i = int(st * SR)
+        if 0 <= i < n:
+            j = min(n, i + len(sig))
+            out[i:j] += sig[: j - i]
+    return out
+
 def dance_music(n, rng):
     """직접 작곡한 K팝 댄스풍 곡 (128BPM, F-G-Em-Am). 3.4초(두 번째 장면)에 드롭."""
     out = np.zeros(n)
@@ -570,7 +706,7 @@ def dance_music(n, rng):
             riser += np.sin(2 * np.pi * np.cumsum(300 + 900 * (y / bar) ** 2) / SR) * (y / bar) ** 2 * 0.3
             add(riser, at, 0.35)
         # 리드 훅
-        if pt in ("drop", "build", "outro") and not (pt == "drop" and b in (2, 3, 12, 13)):
+        if os.environ.get("STYLE") != "song" and pt in ("drop", "build", "outro") and not (pt == "drop" and b in (2, 3, 12, 13)):
             for st, m, ln in hook[b % 4]:
                 y = tt(ln * beat / 4 + 0.08)
                 f = mtof(m)
@@ -660,8 +796,11 @@ def make_audio(path):
         if i < n:
             pad[i:j] += s[: j - i]
     mix += sosfilt(butter(2, 1800, "lp", fs=SR, output="sos"), pad) * 0.045
-    if os.environ.get("STYLE") == "dance":
+    if os.environ.get("STYLE") in ("dance", "song"):
         mix = dance_music(n, rng) * 0.9
+    if os.environ.get("STYLE") == "song":
+        v = vocal_track(n, rng)
+        mix = mix * 0.75 + v / (np.abs(v).max() + 1e-9) * 0.55
     mix *= float(os.environ.get("MUSIC", "1"))  # MUSIC=0 이면 효과음만 (앱에서 음악을 따로 넣을 때)
 
     # 효과음
@@ -695,7 +834,7 @@ def make_audio(path):
     for s in STARTS[1:-1]:
         add(whoosh(), s - 0.12, 0.5)
     for st in SLAMS:
-        add(thud(), st + 0.1, 0.3 if os.environ.get("STYLE") == "dance" else 0.55)
+        add(thud(), st + 0.1, 0.3 if os.environ.get("STYLE") in ("dance", "song") else 0.55)
     S = STARTS
     for at in (S[0] + 1.15, S[0] + 1.5, S[2] + 2.1, S[3] + 0.3, S[4] + 1.6, S[4] + 2.05, S[6] + 0.6,
                S[6] + 1.9, S[7] + 1.0, S[7] + 1.5):
