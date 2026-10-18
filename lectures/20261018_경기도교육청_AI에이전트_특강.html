@@ -7,7 +7,7 @@
   --deep:#0A1222; --navy:#13203A; --ivory:#F6F3EC; --orange:#FF7A2F; --orange-dk:#C9480F;
   --sky:#7CC4FF; --mist:#C9D3E6; --slate:#4A5568; --line:#D8D2C4; --card:#FFFFFF;
   --display:'Black Han Sans','Noto Sans KR',sans-serif; --body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  color-scheme:dark;
+  color-scheme:dark; --spd:1;
 }
 html,body{height:100%}
 body{background:var(--deep);color:var(--ivory);font-family:var(--body);overflow:hidden;user-select:none;-webkit-user-select:none}
@@ -35,6 +35,13 @@ aside.note{display:none}
 .go-pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
 .go-fade{animation:fade .6s ease both}
 .go-wipe{animation:wipe .7s cubic-bezier(.6,0,.2,1) both}
+.go-grand{animation:grand 1.6s cubic-bezier(.2,.8,.2,1) both}
+.fx.go-slam{animation-duration:calc(.55s / var(--spd))}
+.fx.go-drop,.fx.go-rise,.fx.go-left,.fx.go-right,.fx.go-fade{animation-duration:calc(.6s / var(--spd))}
+.fx.go-pop{animation-duration:calc(.5s / var(--spd))}
+.fx.go-wipe{animation-duration:calc(.7s / var(--spd))}
+.fx.go-grand{animation-duration:calc(1.6s / var(--spd))}
+@keyframes grand{0%{opacity:0;transform:translateY(70px) scale(.82);letter-spacing:40px;filter:blur(10px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;letter-spacing:6px}}
 @keyframes slam{0%{opacity:0;transform:scale(2.6) rotate(-5deg);filter:blur(6px)}55%{opacity:1;transform:scale(.9) rotate(1deg);filter:blur(0)}80%{transform:scale(1.04)}100%{opacity:1;transform:none}}
 @keyframes drop{0%{opacity:0;transform:translateY(-220px)}65%{opacity:1;transform:translateY(16px)}100%{opacity:1;transform:none}}
 @keyframes rise{0%{opacity:0;transform:translateY(90px)}100%{opacity:1;transform:none}}
@@ -59,6 +66,22 @@ aside.note{display:none}
 .chip::before{content:"";position:absolute;left:12px;right:12px;top:18px;height:6px;background:var(--sky);box-shadow:0 14px 0 var(--mist),0 28px 0 var(--mist),0 42px 0 var(--mist)}
 .piece{position:absolute;transition:transform .8s cubic-bezier(.2,1.2,.3,1),opacity .4s}
 .ring{position:absolute;border-radius:50%;border:4px solid var(--orange)}
+/* post effects */
+.leak{position:absolute;inset:-25%;z-index:45;pointer-events:none;mix-blend-mode:screen;opacity:0;background:radial-gradient(ellipse 40% 55% at 22% 30%,rgba(255,150,60,.95),transparent 70%),radial-gradient(ellipse 35% 45% at 80% 70%,rgba(255,90,120,.65),transparent 70%),radial-gradient(ellipse 30% 30% at 60% 18%,rgba(255,232,170,.8),transparent 70%)}
+.shine{overflow:hidden;pointer-events:none;mix-blend-mode:overlay}
+.shine i{position:absolute;top:-20%;bottom:-20%;left:-320px;width:260px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);transform:skewX(-20deg)}
+.sig{text-shadow:0 0 24px rgba(255,122,47,.75),0 0 60px rgba(255,122,47,.45)}
+/* direction panel */
+#panel{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(64px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100vw - 24px));box-sizing:border-box;z-index:105;background:rgba(10,18,34,.96);border:1px solid rgba(201,211,230,.3);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;font:500 14px var(--body);color:var(--ivory)}
+#panel h4{margin:0;font:700 13px var(--body);color:var(--sky);letter-spacing:1px}
+#panel .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#panel button{font:600 14px var(--body);color:var(--ivory);background:rgba(19,32,58,.9);border:1px solid rgba(201,211,230,.35);border-radius:10px;padding:9px 10px;cursor:pointer}
+#panel button[aria-pressed="true"]{background:var(--orange);color:var(--navy);border-color:var(--orange)}
+#panel label{display:flex;align-items:center;gap:8px;cursor:pointer}
+#panel input[type=range]{width:100%;accent-color:var(--orange)}
+#panel input[type=checkbox]{accent-color:var(--orange);width:18px;height:18px}
+#panel .row{display:flex;justify-content:space-between;align-items:center}
+#panel :focus-visible{outline:3px solid var(--sky);outline-offset:2px}
 
 /* controls */
 #bar{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));display:flex;gap:6px;align-items:center;z-index:100;opacity:.35;transition:opacity .2s}
@@ -222,17 +245,35 @@ aside.note{display:none}
   <div class="pieces"></div>
   <h1 class="a disp fx" data-fx="slam" data-at="2700" data-sfx="boom" style="left:288px;top:300px;width:1344px;text-align:center;font-size:124px;line-height:1.15">묻는 AI에서<br><span style="color:var(--orange)">일하는 AI로</span></h1>
   <p class="a fx" data-fx="rise" data-at="3400" style="left:288px;top:630px;width:1344px;text-align:center;font-size:44px;font-weight:500;color:var(--mist)">그 변화를 현장보다 한발 앞서 이끄는 리더</p>
-  <p class="a fx" data-fx="fade" data-at="3900" data-sfx="chime" style="left:288px;top:750px;width:1344px;text-align:center;font-size:40px;font-weight:700">감사합니다 · 경기도의원 이채명</p>
+  <p class="a fx" data-fx="fade" data-at="3900" style="left:288px;top:720px;width:1344px;text-align:center;font-size:36px;font-weight:500;color:var(--mist)">감사합니다</p>
+  <h2 class="a disp sig fx" data-fx="grand" data-at="4300" data-sfx="chime" style="left:288px;top:780px;width:1344px;text-align:center;font-size:72px;letter-spacing:6px">경기도의원 이채명</h2>
+  <div class="a shine" style="left:288px;top:200px;width:1344px;height:760px"><i></i></div>
   <aside class="note">“버스가 아직 완전히 출발하지는 않았습니다. 하지만 곧 출발합니다. 묻는 AI에서 일하는 AI로. 그 변화를 현장보다 한발 앞서 이끄는 분들이 바로 여기 계신 국장님, 과장님들이시라고 믿습니다. 감사합니다.” 조각 48개가 날아와 카드가 완성된 뒤 문구가 붙습니다.</aside>
 </section>
 
+<div class="leak"></div>
 <div class="curtain l"></div><div class="curtain r"></div>
 <canvas id="fx" width="1920" height="1080"></canvas>
 </div>
 </div>
 
 <button id="start" type="button">▶ 발표 시작 (소리 켜기)</button>
-<div id="notes" hidden><span id="notesText"></span><span id="help">→ / Space / 클릭: 다음 · ←: 이전 · R: 다시 재생 · N: 노트 · M: 효과음 · B: 배경음악 · F: 전체화면</span></div>
+<div id="notes" hidden><span id="notesText"></span><span id="help">→ / Space / 클릭: 다음 · ←: 이전 · R: 다시 재생 · N: 노트 · S: 연출 패널 · M: 효과음 · B: 배경음악 · F: 전체화면</span></div>
+<div id="panel" hidden>
+  <h4>스타일 프리셋</h4>
+  <div class="grid" id="presets">
+    <button type="button" data-preset="기본" aria-pressed="true">기본</button>
+    <button type="button" data-preset="시네마틱" aria-pressed="false">시네마틱</button>
+    <button type="button" data-preset="임팩트" aria-pressed="false">임팩트</button>
+    <button type="button" data-preset="차분" aria-pressed="false">차분</button>
+  </div>
+  <h4>모션 속도</h4>
+  <div class="row"><input type="range" id="speed" min="0.5" max="1.6" step="0.1" value="1" aria-label="모션 속도"><output id="spdOut" for="speed" style="min-width:44px;text-align:right">1.0×</output></div>
+  <h4>후가공 효과</h4>
+  <label for="fxSmoke"><input type="checkbox" id="fxSmoke" checked> 연기 (Smoke)</label>
+  <label for="fxSpark"><input type="checkbox" id="fxSpark" checked> 스파크 (Spark)</label>
+  <label for="fxLeak"><input type="checkbox" id="fxLeak" checked> 라이트 리크 (Light Leak)</label>
+</div>
 <div id="bar">
   <button type="button" id="prev" aria-label="이전 장">◀</button>
   <span id="page">1 / 13</span>
@@ -241,6 +282,7 @@ aside.note{display:none}
   <button type="button" id="sfxBtn" aria-pressed="true">효과음</button>
   <button type="button" id="bgmBtn" aria-pressed="false">배경음악</button>
   <button type="button" id="noteBtn" aria-pressed="false">노트</button>
+  <button type="button" id="panelBtn" aria-pressed="false">연출</button>
   <button type="button" id="fsBtn">전체화면</button>
 </div>
 
@@ -251,6 +293,27 @@ const slides = [...stage.querySelectorAll('.slide')];
 const fxCanvas = document.getElementById('fx'), fxc = fxCanvas.getContext('2d');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let cur = 0, timers = [], started = false, sfxOn = true, bgmOn = false;
+
+/* ---------- direction presets ---------- */
+const PRESETS = {
+  '기본':     { smoke:.5, spark:.6, leak:.45, shake:1,   parts:1,   spd:1   },
+  '시네마틱': { smoke:1,  spark:.8, leak:.9,  shake:.6,  parts:.8,  spd:.8  },
+  '임팩트':   { smoke:.4, spark:1,  leak:.55, shake:1.6, parts:1.4, spd:1.2 },
+  '차분':     { smoke:.3, spark:0,  leak:.25, shake:0,   parts:.3,  spd:.9  }
+};
+let P = { ...PRESETS['기본'] }, speed = 1;
+const fxOn = { smoke:true, spark:true, leak:true };
+const leakEl = stage.querySelector('.leak');
+function setSpeed(v){ speed = Math.max(.5, Math.min(1.6, v)); document.documentElement.style.setProperty('--spd', speed); }
+function leak(strength){
+  if (reduce || !fxOn.leak || !strength) return;
+  const a = (Math.random()-.5)*16;
+  leakEl.animate([
+    { opacity:0, transform:`translateX(-14%) rotate(${a-4}deg) scale(1)` },
+    { opacity:Math.min(.95, strength), offset:.35 },
+    { opacity:0, transform:`translateX(14%) rotate(${a+4}deg) scale(1.15)` }
+  ], { duration:1700/speed, easing:'ease-out' });
+}
 
 /* ---------- fit ---------- */
 function fit(){ const s = Math.min(innerWidth/1920, innerHeight/1080); stage.style.transform = `scale(${s})`; stage.style.margin = `${(1080*s-1080)/2}px ${(1920*s-1920)/2}px`; }
@@ -318,9 +381,22 @@ function setBgm(on){
 /* ---------- particles / shake ---------- */
 let parts = [], rings = [];
 function stageXY(el){ const r = el.getBoundingClientRect(), s = stage.getBoundingClientRect(), k = s.width/1920; return { x:(r.left - s.left + r.width/2)/k, y:(r.top - s.top + r.height/2)/k, w:r.width/k, h:r.height/k }; }
+function smokeRGB(){ const c = slides[cur].classList; return c.contains('light') ? '74,85,104' : c.contains('hot') ? '19,32,58' : '246,243,236'; }
+function sparks(x, y, w, h, n, fast){
+  const cols = ['#FFD27A','#FFFFFF','#FF9A4A','#FFE9B8'];
+  for (let i=0;i<n;i++){ const a = Math.random()*Math.PI*2, v = fast ? 14+Math.random()*22 : 2+Math.random()*5;
+    parts.push({spark:true, x:x+(Math.random()-.5)*w, y:y+(Math.random()-.5)*h, vx:Math.cos(a)*v, vy:Math.sin(a)*v-(fast?4:1), decay:.018+Math.random()*.02, c:cols[i%4], life:1}); }
+}
+function smoke(x, y, w, h, n){
+  const rgb = smokeRGB();
+  for (let i=0;i<n;i++) parts.push({smoke:true, x:x+(Math.random()-.5)*w, y:y+(Math.random()-.2)*h*.6, vx:(Math.random()-.5)*1.4, vy:-.3-Math.random()*.9, r:40+Math.random()*70, gr:1+Math.random()*1.6, a:.1+.16*P.smoke, rgb, life:1});
+}
 function burst(el, big){
   if (reduce) return;
-  const p = stageXY(el), n = big ? 70 : 36, cols = ['#FF7A2F','#F6F3EC','#7CC4FF','#FFB27A'];
+  const p = stageXY(el), n = Math.round((big ? 70 : 36)*P.parts), cols = ['#FF7A2F','#F6F3EC','#7CC4FF','#FFB27A'];
+  if (fxOn.spark && P.spark) sparks(p.x, p.y, p.w*.6, p.h*.5, Math.round((big?70:34)*P.spark), true);
+  if (fxOn.smoke && P.smoke) smoke(p.x, p.y, p.w, p.h, Math.round((big?18:10)*P.smoke));
+  if (big) leak(P.leak);
   for (let i=0;i<n;i++){ const a = Math.random()*Math.PI*2, v = (big?14:9)*(.4+Math.random());
     parts.push({x:p.x + (Math.random()-.5)*p.w*.8, y:p.y + (Math.random()-.5)*p.h*.6, vx:Math.cos(a)*v, vy:Math.sin(a)*v-3, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.4, s:6+Math.random()*(big?18:12), c:cols[i%4], life:1}); }
   rings.push({x:p.x, y:p.y, r:20, life:1, max: big ? 900 : 520});
@@ -328,21 +404,37 @@ function burst(el, big){
   for (let i=0;i<(big?18:10);i++){ const a = Math.random()*Math.PI*2; parts.push({line:true, x:p.x, y:p.y, a, d:60+Math.random()*80, len:80+Math.random()*120, life:1}); }
 }
 function shake(big){
-  if (reduce) return;
-  const m = big ? 18 : 10;
-  stage.animate([{translate:'0 0'},{translate:`${m}px ${-m/2}px`},{translate:`${-m}px ${m/2}px`},{translate:`${m/2}px ${m/3}px`},{translate:`${-m/3}px 0`},{translate:'0 0'}],{duration:big?420:320, easing:'ease-out'});
+  if (reduce || !P.shake) return;
+  const m = (big ? 18 : 10)*P.shake;
+  stage.animate([{translate:'0 0'},{translate:`${m}px ${-m/2}px`},{translate:`${-m}px ${m/2}px`},{translate:`${m/2}px ${m/3}px`},{translate:`${-m/3}px 0`},{translate:'0 0'}],{duration:(big?420:320)/Math.max(.7,speed), easing:'ease-out'});
 }
 function drawFx(){
   fxc.clearRect(0,0,1920,1080);
   rings = rings.filter(r => (r.life -= .035) > 0);
   rings.forEach(r => { r.r += (r.max - r.r)*.12; fxc.globalAlpha = r.life*.8; fxc.strokeStyle = '#FF7A2F'; fxc.lineWidth = 10*r.life; fxc.beginPath(); fxc.arc(r.x, r.y, r.r, 0, Math.PI*2); fxc.stroke(); });
-  parts = parts.filter(p => (p.life -= p.line ? .05 : .018) > 0);
+  parts = parts.filter(p => (p.life -= p.spark ? p.decay : p.smoke ? .007 : p.line ? .05 : .018) > 0);
+  // smoke: soft puffs drifting up
+  parts.forEach(p => { if (!p.smoke) return;
+    p.x += p.vx; p.y += p.vy; p.r += p.gr;
+    const g = fxc.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+    g.addColorStop(0, `rgba(${p.rgb},${p.a*p.life})`); g.addColorStop(1, `rgba(${p.rgb},0)`);
+    fxc.globalAlpha = 1; fxc.fillStyle = g; fxc.beginPath(); fxc.arc(p.x,p.y,p.r,0,Math.PI*2); fxc.fill();
+  });
   parts.forEach(p => {
+    if (p.smoke || p.spark) return;
     fxc.globalAlpha = Math.max(0,p.life);
     if (p.line){ p.d += 38; fxc.strokeStyle = '#F6F3EC'; fxc.lineWidth = 5; fxc.beginPath(); fxc.moveTo(p.x+Math.cos(p.a)*p.d, p.y+Math.sin(p.a)*p.d); fxc.lineTo(p.x+Math.cos(p.a)*(p.d+p.len), p.y+Math.sin(p.a)*(p.d+p.len)); fxc.stroke(); return; }
     p.x += p.vx; p.y += p.vy; p.vy += .45; p.vx *= .985; p.r += p.vr;
     fxc.save(); fxc.translate(p.x,p.y); fxc.rotate(p.r); fxc.fillStyle = p.c; fxc.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); fxc.restore();
   });
+  // sparks: glowing streaks, additive
+  fxc.save(); fxc.globalCompositeOperation = 'lighter'; fxc.lineCap = 'round'; fxc.shadowBlur = 14;
+  parts.forEach(p => { if (!p.spark) return;
+    const px = p.x, py = p.y; p.x += p.vx; p.y += p.vy; p.vx *= .93; p.vy = p.vy*.93 + .35;
+    fxc.globalAlpha = p.life; fxc.strokeStyle = p.c; fxc.shadowColor = p.c; fxc.lineWidth = 1 + 3*p.life;
+    fxc.beginPath(); fxc.moveTo(px - p.vx*.8, py - p.vy*.8); fxc.lineTo(p.x, p.y); fxc.stroke();
+  });
+  fxc.restore();
   fxc.globalAlpha = 1;
 }
 
@@ -371,7 +463,7 @@ function loop(t){
 requestAnimationFrame(loop);
 
 /* ---------- scenes ---------- */
-function later(fn, ms){ timers.push(setTimeout(fn, reduce ? Math.min(ms, 300) : ms)); }
+function later(fn, ms){ timers.push(setTimeout(fn, reduce ? Math.min(ms, 300) : ms / speed)); }
 function countUp(span){
   const to = +span.dataset.count, dur = +span.dataset.countDur || 1000, steps = Math.min(to, 30);
   span.textContent = '0';
@@ -383,6 +475,7 @@ const scenes = {
     [L,R].forEach(c => { c.classList.remove('opening'); c.classList.add('closed'); });
     void L.offsetWidth;
     later(() => { [L,R].forEach(c => { c.classList.add('opening'); c.classList.remove('closed'); }); sfx('curtain'); }, 350);
+    later(() => { leak(P.leak); if (fxOn.spark && P.spark && !reduce) sparks(960, 540, 900, 700, Math.round(50*P.spark), true); }, 850);
   },
   rings(s){ later(() => { const h = s.querySelector('h1'); burst(h, true); burst(h, true); }, 1350); },
   files(s){
@@ -411,6 +504,16 @@ const scenes = {
       later(() => { p.style.opacity = 1; p.style.transform = 'none'; if (k%3===0) sfx('snap'); }, 300 + k*40);
     }
     later(() => { sfx('thud'); shake(false); }, 300 + 48*40 + 400);
+    // cinematic loop: light sweep, light leak, drifting sparks and smoke while the ending stays on screen
+    const bar = s.querySelector('.shine i');
+    const cine = () => {
+      if (!reduce) bar.animate([{left:'-320px'},{left:'1700px'}], { duration:1500/speed, easing:'cubic-bezier(.6,0,.3,1)' });
+      leak(P.leak*.7);
+      if (fxOn.spark && P.spark && !reduce) sparks(960, 560, 1344, 680, Math.round(26*P.spark), false);
+      if (fxOn.smoke && P.smoke && !reduce) smoke(960, 900, 1500, 120, Math.round(6*P.smoke));
+      later(cine, 4200);
+    };
+    later(cine, 5200);
   }
 };
 
@@ -428,6 +531,7 @@ function play(i){
       if (e.dataset.sfx) sfx(e.dataset.sfx);
       const big = e.dataset.sfx === 'boom';
       if (e.dataset.fx === 'slam') later(() => { shake(big); burst(e, big); }, 250);
+      if (e.dataset.fx === 'grand') later(() => { leak(P.leak); if (fxOn.spark && P.spark && !reduce){ const q = stageXY(e); sparks(q.x, q.y, q.w, q.h, Math.round(40*P.spark), false); } }, 500);
       e.querySelectorAll('[data-count]').forEach(countUp);
     }, +e.dataset.at || 0);
   });
@@ -474,10 +578,28 @@ $('sfxBtn').addEventListener('click', e => { audio(); sfxOn = !sfxOn; e.currentT
 $('bgmBtn').addEventListener('click', () => { const a = audio(); if (a && a.state==='suspended') a.resume(); setBgm(!bgmOn); });
 $('noteBtn').addEventListener('click', toggleNotes);
 $('fsBtn').addEventListener('click', toggleFs);
+/* direction panel: preset, speed and post effects apply instantly and replay the current slide */
+const presetBtns = [...document.querySelectorAll('#presets button')];
+function replayLive(){ if (started) play(cur); }
+function choosePreset(name){
+  P = { ...PRESETS[name] };
+  presetBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.preset === name));
+  setSpeed(P.spd); $('speed').value = P.spd; $('spdOut').textContent = P.spd.toFixed(1) + '×';
+  try { localStorage.setItem('lecturePreset', name); } catch(e){}
+}
+presetBtns.forEach(b => b.addEventListener('click', () => { choosePreset(b.dataset.preset); replayLive(); }));
+$('speed').addEventListener('input', e => { setSpeed(+e.target.value); $('spdOut').textContent = speed.toFixed(1) + '×'; });
+$('speed').addEventListener('change', replayLive);
+[['fxSmoke','smoke'],['fxSpark','spark'],['fxLeak','leak']].forEach(([id,k]) => $(id).addEventListener('change', e => { fxOn[k] = e.target.checked; replayLive(); }));
+$('panelBtn').addEventListener('click', togglePanel);
+function togglePanel(){ const p = $('panel'); p.hidden = !p.hidden; $('panelBtn').setAttribute('aria-pressed', !p.hidden); }
+try { const saved = localStorage.getItem('lecturePreset'); if (saved && PRESETS[saved]) choosePreset(saved); } catch(e){}
 function toggleNotes(){ const n = $('notes'); n.hidden = !n.hidden; $('noteBtn').setAttribute('aria-pressed', !n.hidden); }
 function toggleFs(){ try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(()=>{}); } catch(e){} }
 addEventListener('keydown', e => {
   const k = e.key;
+  if (e.target.closest && e.target.closest('#panel')) return;
+  if (k==='s'||k==='S'){ togglePanel(); return; }
   if (['ArrowRight','PageDown',' ','Enter'].includes(k)){ e.preventDefault(); started ? go(1) : start(); }
   else if (['ArrowLeft','PageUp','Backspace'].includes(k)){ e.preventDefault(); go(-1); }
   else if (k==='r'||k==='R'){ started ? play(cur) : start(); }
