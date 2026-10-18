@@ -1,0 +1,491 @@
+<title>일하는 AI 특강</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 1920×1080 stage scaled to fit, slides push sideways, fx canvas on top for bursts */
+:root{
+  --deep:#0A1222; --navy:#13203A; --ivory:#F6F3EC; --orange:#FF7A2F; --orange-dk:#C9480F;
+  --sky:#7CC4FF; --mist:#C9D3E6; --slate:#4A5568; --line:#D8D2C4; --card:#FFFFFF;
+  --display:'Black Han Sans','Noto Sans KR',sans-serif; --body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--deep);color:var(--ivory);font-family:var(--body);overflow:hidden;user-select:none;-webkit-user-select:none}
+#viewport{position:fixed;inset:0;display:grid;place-items:center}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;transform-origin:center center;background:var(--navy);flex:none}
+.slide{position:absolute;inset:0;overflow:hidden;visibility:hidden;will-change:transform}
+.slide.on{visibility:visible}
+.dark{background:var(--navy);color:var(--ivory)}
+.light{background:var(--ivory);color:var(--navy)}
+.hot{background:var(--orange);color:var(--navy)}
+.amb{position:absolute;inset:0;width:1920px;height:1080px}
+.a{position:absolute}
+.disp{font-family:var(--display);font-weight:400;line-height:1.1}
+h1,h2,h3,p{margin:0}
+aside.note{display:none}
+#fx{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none;z-index:50}
+
+/* build states */
+.fx.pre{opacity:0}
+.go-slam{animation:slam .55s cubic-bezier(.2,1.5,.4,1) both}
+.go-drop{animation:drop .6s cubic-bezier(.2,1.3,.4,1) both}
+.go-rise{animation:rise .6s cubic-bezier(.2,.9,.3,1) both}
+.go-left{animation:fromL .6s cubic-bezier(.2,1.1,.3,1) both}
+.go-right{animation:fromR .6s cubic-bezier(.2,1.1,.3,1) both}
+.go-pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
+.go-fade{animation:fade .6s ease both}
+.go-wipe{animation:wipe .7s cubic-bezier(.6,0,.2,1) both}
+@keyframes slam{0%{opacity:0;transform:scale(2.6) rotate(-5deg);filter:blur(6px)}55%{opacity:1;transform:scale(.9) rotate(1deg);filter:blur(0)}80%{transform:scale(1.04)}100%{opacity:1;transform:none}}
+@keyframes drop{0%{opacity:0;transform:translateY(-220px)}65%{opacity:1;transform:translateY(16px)}100%{opacity:1;transform:none}}
+@keyframes rise{0%{opacity:0;transform:translateY(90px)}100%{opacity:1;transform:none}}
+@keyframes fromL{0%{opacity:0;transform:translateX(-700px) rotate(-6deg)}70%{opacity:1;transform:translateX(20px)}100%{opacity:1;transform:none}}
+@keyframes fromR{0%{opacity:0;transform:translateX(700px) rotate(6deg)}70%{opacity:1;transform:translateX(-20px)}100%{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.2)}70%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:none}}
+@keyframes fade{0%{opacity:0}100%{opacity:1}}
+@keyframes wipe{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
+
+/* curtain */
+.curtain{position:absolute;inset:-40px;z-index:40;pointer-events:none;transform:translateX(-140%)}
+.curtain.l{background:linear-gradient(120deg,var(--orange) 0 49.6%,transparent 50%)}
+.curtain.r{background:linear-gradient(120deg,transparent 0 50%,var(--deep) 50.4%);transform:translateX(140%)}
+.curtain.closed{transform:none}
+.curtain.opening{transition:transform .9s cubic-bezier(.7,0,.2,1)}
+
+/* shared pieces */
+.pill{border-radius:999px;padding:22px 40px;font-weight:700}
+.card{border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:18px}
+.card ul{margin:0;padding-left:1.1em;font-size:32px;line-height:1.65}
+.chip{position:absolute;width:64px;height:80px;border-radius:8px;background:var(--ivory);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.chip::before{content:"";position:absolute;left:12px;right:12px;top:18px;height:6px;background:var(--sky);box-shadow:0 14px 0 var(--mist),0 28px 0 var(--mist),0 42px 0 var(--mist)}
+.piece{position:absolute;transition:transform .8s cubic-bezier(.2,1.2,.3,1),opacity .4s}
+.ring{position:absolute;border-radius:50%;border:4px solid var(--orange)}
+
+/* controls */
+#bar{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));display:flex;gap:6px;align-items:center;z-index:100;opacity:.35;transition:opacity .2s}
+#bar:hover,#bar:focus-within{opacity:1}
+#bar button{font:600 14px var(--body);color:var(--ivory);background:rgba(19,32,58,.85);border:1px solid rgba(201,211,230,.35);border-radius:10px;padding:8px 12px;cursor:pointer}
+#bar button[aria-pressed="true"]{background:var(--orange);color:var(--navy);border-color:var(--orange)}
+#bar button:focus-visible,#start:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+#page{font:600 14px var(--body);color:var(--mist);padding:0 6px;font-variant-numeric:tabular-nums}
+#start{position:fixed;left:50%;bottom:max(28px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:110;font:700 20px var(--body);background:var(--orange);color:var(--navy);border:none;border-radius:999px;padding:16px 30px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#notes{position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(64px + env(safe-area-inset-bottom,0px));max-height:34vh;overflow:auto;z-index:90;background:rgba(10,18,34,.94);color:var(--ivory);border:1px solid rgba(201,211,230,.3);border-radius:14px;padding:16px 20px;font:400 17px/1.7 var(--body)}
+#help{font:400 13px var(--body);color:var(--mist);display:block;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.go-slam,.go-drop,.go-rise,.go-left,.go-right,.go-pop,.go-wipe{animation:fade .3s ease both}}
+</style>
+
+<div id="viewport">
+<div id="stage" aria-live="polite">
+
+<!-- 1 cover -->
+<section class="slide dark" data-scene="cover">
+  <canvas class="amb"></canvas>
+  <div class="a" style="left:0;top:0;width:24px;height:1080px;background:var(--orange)"></div>
+  <p class="a fx" data-fx="fade" data-at="1100" style="left:128px;top:200px;font-size:36px;font-weight:500;color:var(--sky);letter-spacing:2px">경기도교육청 국·과장 특강 · 10분</p>
+  <h1 class="a disp fx" data-fx="slam" data-at="1400" data-sfx="slam" style="left:128px;top:300px;font-size:170px">묻는 AI에서</h1>
+  <h1 class="a disp fx" data-fx="slam" data-at="1950" data-sfx="slam" style="left:128px;top:490px;font-size:170px;color:var(--orange)">일하는 AI로</h1>
+  <p class="a fx" data-fx="rise" data-at="2600" data-sfx="whoosh" style="left:128px;top:720px;font-size:48px;font-weight:500;color:var(--mist)">AI 에이전트 시대, 행정 리더가 할 일</p>
+  <p class="a fx" data-fx="fade" data-at="3100" style="left:128px;top:860px;font-size:36px;font-weight:700">경기도의원 이채명</p>
+  <aside class="note">[0:00] 인사 후 바로 다음 장의 질문으로 넘어갑니다. “오늘 10분, 이 한 문장만 기억하시면 됩니다. 묻는 AI에서 일하는 AI로.”</aside>
+</section>
+
+<!-- 2 hook -->
+<section class="slide light">
+  <p class="a fx" data-fx="fade" data-at="200" style="left:128px;top:240px;font-size:48px;font-weight:500;color:var(--slate)">오늘 아침에도</p>
+  <h1 class="a disp fx" data-fx="slam" data-at="600" data-sfx="slam" style="left:128px;top:330px;font-size:120px;line-height:1.15">“AI한테 한번 물어봐”</h1>
+  <h1 class="a disp fx" data-fx="slam" data-at="1200" data-sfx="slam" style="left:128px;top:480px;font-size:120px">하셨습니까?</h1>
+  <p class="a fx" data-fx="wipe" data-at="2000" data-sfx="whoosh" style="left:128px;top:720px;font-size:60px;font-weight:900;color:var(--orange-dk)">이제 물어보는 것만으로는 부족합니다</p>
+  <aside class="note">[0:00~1:00] “국장님, 과장님들. 혹시 오늘 아침에도 ‘챗GPT한테 한번 물어봐’ 하신 분 계십니까? (손을 들어 보게 하고) 좋습니다. 그런데 오늘은 조금 불편한 말씀으로 시작하겠습니다. 이제 AI에게 물어보는 것만으로는 부족합니다.”</aside>
+</section>
+
+<!-- 3 agent -->
+<section class="slide hot" data-scene="rings">
+  <p class="a fx" data-fx="left" data-at="200" data-sfx="whoosh" style="left:128px;top:200px;font-size:50px;font-weight:700">일을 시키면 “알겠습니다”</p>
+  <p class="a fx" data-fx="left" data-at="600" data-sfx="whoosh" style="left:128px;top:290px;font-size:50px;font-weight:700">스스로 폴더에 들어가 자료를 찾고, 정리하고, 끝냅니다</p>
+  <h1 class="a disp fx" data-fx="slam" data-at="1300" data-sfx="boom" style="left:128px;top:440px;font-size:240px">AI 에이전트</h1>
+  <p class="a fx" data-fx="fade" data-at="2200" style="left:128px;top:800px;font-size:40px;font-weight:500">오늘 10분, 이 변화가 우리 행정에 어떤 의미인지 말씀드립니다</p>
+  <aside class="note">“지금 AI는 묻는 말에 답하는 단계를 넘었습니다. 일을 시키면 ‘알겠습니다’ 하고, 스스로 우리 업무 폴더에 들어가 자료를 찾고, 정리하고, 결과물까지 만들어 냅니다. 이것을 AI 에이전트라고 합니다.”</aside>
+</section>
+
+<!-- 4 compare -->
+<section class="slide light">
+  <h2 class="a disp fx" data-fx="drop" data-at="100" data-sfx="thud" style="left:128px;top:128px;font-size:80px">챗봇과 에이전트의 차이</h2>
+  <div class="a card fx" data-fx="left" data-at="600" data-sfx="whoosh" style="left:128px;top:300px;width:772px;background:var(--card);border:2px solid var(--line);box-sizing:border-box">
+    <h3 style="font-size:56px;font-weight:900">AI 챗봇</h3>
+    <p style="font-size:40px;font-weight:700;color:var(--slate)">똑똑한 상담원</p>
+    <ul style="color:var(--slate)"><li>물으면 답한다</li><li>대화창 안에서 끝난다</li><li>복사·정리는 결국 내가 한다</li></ul>
+  </div>
+  <div class="a card fx" data-fx="right" data-at="1100" data-sfx="whoosh" style="left:1020px;top:300px;width:772px;background:var(--navy);color:var(--ivory);box-sizing:border-box">
+    <h3 style="font-size:56px;font-weight:900;color:var(--orange)">AI 에이전트</h3>
+    <p style="font-size:40px;font-weight:700">일 잘하는 비서</p>
+    <ul style="color:var(--mist)"><li>시키면 끝까지 해낸다</li><li>내 폴더에 들어가 직접 작업한다</li><li>완성된 결과물을 내놓는다</li></ul>
+  </div>
+  <p class="a disp fx" data-fx="slam" data-at="1700" data-sfx="slam" style="left:900px;top:470px;width:120px;height:120px;border-radius:50%;background:var(--orange);color:var(--navy);font-size:52px;display:grid;place-items:center">VS</p>
+  <aside class="note">[1:00~3:30] “쉽게 비유하겠습니다. 챗봇은 똑똑한 상담원입니다. 물어보면 답합니다. 하지만 답을 받고 나서 복사하고, 붙이고, 정리하는 일은 여전히 우리가 합니다. 에이전트는 일 잘하는 비서입니다. 시키면 끝까지 해냅니다.”</aside>
+</section>
+
+<!-- 5 example -->
+<section class="slide dark" data-scene="files">
+  <canvas class="amb"></canvas>
+  <h2 class="a disp fx" data-fx="drop" data-at="100" data-sfx="thud" style="left:128px;top:128px;font-size:80px">예를 들면, 지시 한 줄</h2>
+  <p class="a pill fx" data-fx="wipe" data-at="500" data-sfx="whoosh" style="left:128px;top:262px;font-size:40px;background:var(--ivory);color:var(--navy)">“이번 주 학교 보고자료 30개, 한 장짜리 요약 보고서로 만들어 줘”</p>
+  <p class="a disp fx" data-fx="pop" data-at="1000" style="left:128px;top:470px;width:600px;text-align:center;font-size:240px;color:var(--orange)"><span data-count="30" data-count-at="1100" data-count-dur="2200">30</span>개</p>
+  <p class="a fx" data-fx="fade" data-at="1100" style="left:128px;top:760px;width:600px;text-align:center;font-size:36px;color:var(--mist)">흩어진 엑셀·한글 파일</p>
+  <svg class="a" style="left:780px;top:540px" width="360" height="160" viewBox="0 0 360 160" aria-label="화살표"><path class="draw" d="M10 80 C120 10 220 150 330 80" fill="none" stroke="#7CC4FF" stroke-width="14" stroke-linecap="round"/><path class="draw" d="M290 50 L335 80 L290 112" fill="none" stroke="#7CC4FF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <p class="a fx" data-fx="fade" data-at="3400" style="left:760px;top:720px;width:400px;text-align:center;font-size:32px;color:var(--sky)">열고, 합치고, 정리</p>
+  <p class="a disp fx" data-fx="slam" data-at="3700" data-sfx="boom" style="left:1192px;top:470px;width:600px;text-align:center;font-size:240px">1장</p>
+  <p class="a fx" data-fx="fade" data-at="3900" style="left:1192px;top:760px;width:600px;text-align:center;font-size:36px;color:var(--mist)">요약 보고서 초안</p>
+  <div class="chips"></div>
+  <aside class="note">“예를 들어 ‘이번 주 학교에서 올라온 보고 자료 30개를 취합해서 한 장짜리 요약 보고서로 만들어 줘’ 하면, 에이전트가 파일을 하나하나 열어 보고 표로 정리한 뒤 보고서 초안까지 써 놓습니다.”</aside>
+</section>
+
+<!-- 6 calc -->
+<section class="slide light">
+  <h2 class="a disp fx" data-fx="drop" data-at="100" data-sfx="thud" style="left:128px;top:128px;font-size:80px">민간은 이미 계산을 시작했습니다</h2>
+  <p class="a fx" data-fx="fade" data-at="500" style="left:128px;top:330px;font-size:36px;font-weight:700;color:var(--slate)">AI 에이전트 이용료</p>
+  <p class="a disp fx" data-fx="slam" data-at="700" data-sfx="slam" style="left:128px;top:400px;font-size:140px;color:var(--orange-dk)">월 <span data-count="30" data-count-at="700" data-count-dur="1200">30</span>만 원</p>
+  <p class="a fx" data-fx="fade" data-at="1700" style="left:1020px;top:330px;font-size:36px;font-weight:700;color:var(--slate)">신입 직원 실무 교육</p>
+  <p class="a disp fx" data-fx="slam" data-at="1900" data-sfx="slam" style="left:1020px;top:400px;font-size:140px">6개월~1년</p>
+  <div class="a fx" data-fx="wipe" data-at="2500" style="left:128px;top:640px;width:1664px;height:4px;background:var(--line)"></div>
+  <p class="a fx" data-fx="rise" data-at="2800" data-sfx="whoosh" style="left:128px;top:690px;font-size:58px;font-weight:900">몇 달 걸려 익힐 일을, 몇 분 만에 해냅니다</p>
+  <p class="a" style="left:128px;top:980px;font-size:24px;color:#6B7280">출처: 대학 취업 특강의 강연자 사례(유료 요금제 약 200달러/월). 금액·기간은 예시입니다.</p>
+  <aside class="note">“민간은 이미 계산을 시작했습니다. 한 달 30만 원 정도의 AI 에이전트가, 신입 직원이 몇 달 걸려 익힐 업무를 몇 분 만에 해내는 모습을 보고 기업 대표들이 사람을 뽑을지 AI를 쓸지 고민하고 있습니다. 그렇다면 공공은 어떨까요?”</aside>
+</section>
+
+<!-- 7 purpose -->
+<section class="slide dark">
+  <canvas class="amb"></canvas>
+  <p class="a fx" data-fx="fade" data-at="200" style="left:128px;top:200px;font-size:44px;font-weight:700;color:var(--sky)">공공이 AI 에이전트를 쓰는 이유</p>
+  <h1 class="a disp fx" data-fx="slam" data-at="600" data-sfx="slam" style="left:128px;top:320px;font-size:150px">서류에 쓰던 시간을</h1>
+  <h1 class="a disp fx" data-fx="slam" data-at="1200" data-sfx="boom" style="left:128px;top:500px;font-size:150px;color:var(--orange)">현장의 시간으로</h1>
+  <p class="a fx" data-fx="rise" data-at="1900" data-sfx="whoosh" style="left:128px;top:750px;font-size:44px;font-weight:500;color:var(--mist)">목표는 인력 감축이 아니라 업무 경감, 그 시간은 학생과 학교 현장으로</p>
+  <aside class="note">“우리는 사람을 줄이자는 게 아닙니다. 우리 직원들이 서류에 쓰는 시간을 줄여, 학생과 학교 현장에 쓰는 시간으로 돌려주자는 겁니다. 이것이 공공 부문이 AI 에이전트를 써야 하는 이유입니다.”</aside>
+</section>
+
+<!-- 8 usecases -->
+<section class="slide light">
+  <h2 class="a disp fx" data-fx="drop" data-at="100" data-sfx="thud" style="left:128px;top:128px;font-size:80px">우리 업무에 대입해 보면</h2>
+  <div class="a card fx" data-fx="drop" data-at="500" data-sfx="snap" style="left:128px;top:320px;width:313px;padding:30px;box-sizing:border-box;background:var(--card);border:2px solid var(--line)"><p class="disp" style="font-size:64px;color:var(--orange-dk)">취합</p><h3 style="font-size:34px;font-weight:900">자료 취합</h3><p style="font-size:26px;line-height:1.5;color:var(--slate)">학교·부서 엑셀 수십 개를 합치고 누락 기관을 찾아 줍니다</p></div>
+  <div class="a card fx" data-fx="drop" data-at="750" data-sfx="snap" style="left:465px;top:320px;width:313px;padding:30px;box-sizing:border-box;background:var(--card);border:2px solid var(--line)"><p class="disp" style="font-size:64px;color:var(--orange-dk)">보고</p><h3 style="font-size:34px;font-weight:900">보고서 초안</h3><p style="font-size:26px;line-height:1.5;color:var(--slate)">회의 녹취와 메모로 회의록·결과 보고서 초안을 씁니다</p></div>
+  <div class="a card fx" data-fx="drop" data-at="1000" data-sfx="snap" style="left:802px;top:320px;width:313px;padding:30px;box-sizing:border-box;background:var(--card);border:2px solid var(--line)"><p class="disp" style="font-size:64px;color:var(--orange-dk)">민원</p><h3 style="font-size:34px;font-weight:900">민원 답변</h3><p style="font-size:26px;line-height:1.5;color:var(--slate)">반복 민원을 분류하고 규정을 근거로 답변 초안을 씁니다</p></div>
+  <div class="a card fx" data-fx="drop" data-at="1250" data-sfx="snap" style="left:1139px;top:320px;width:313px;padding:30px;box-sizing:border-box;background:var(--card);border:2px solid var(--line)"><p class="disp" style="font-size:64px;color:var(--orange-dk)">지침</p><h3 style="font-size:34px;font-weight:900">지침 검토</h3><p style="font-size:26px;line-height:1.5;color:var(--slate)">수십 쪽 지침에서 이번 사업에 해당하는 조항만 뽑습니다</p></div>
+  <div class="a card fx" data-fx="slam" data-at="1600" data-sfx="slam" style="left:1476px;top:320px;width:316px;padding:30px;box-sizing:border-box;background:var(--navy);color:var(--ivory)"><p class="disp" style="font-size:64px;color:var(--orange)">공문</p><h3 style="font-size:34px;font-weight:900;color:var(--orange)">공문 줄이기</h3><p style="font-size:26px;line-height:1.5;color:var(--mist)">학교로 가는 공문 중 중복·통합 가능한 것을 찾아냅니다</p></div>
+  <p class="a fx" data-fx="rise" data-at="2300" data-sfx="whoosh" style="left:128px;top:820px;font-size:42px;font-weight:700">매주 반복되는 일부터, 작은 것부터 맡겨 봅니다</p>
+  <aside class="note">[3:30~6:00] “우리 업무에 대입해 보겠습니다. 자료 취합, 보고서 초안, 민원 답변 초안, 규정·지침 검토, 그리고 학교 현장에 보내는 공문 가운데 중복되거나 통합할 수 있는 것 찾기.” 발표 전에 해당 국·과의 실제 반복 업무로 카드 내용을 바꾸면 훨씬 와닿습니다.</aside>
+</section>
+
+<!-- 9 data -->
+<section class="slide dark">
+  <canvas class="amb"></canvas>
+  <p class="a fx" data-fx="fade" data-at="200" style="left:128px;top:180px;font-size:44px;font-weight:700;color:var(--sky)">기억할 한 가지</p>
+  <h1 class="a disp fx" data-fx="slam" data-at="600" data-sfx="slam" style="left:128px;top:270px;font-size:124px">AI는 있는 자료를 키웁니다</h1>
+  <p class="a fx" data-fx="wipe" data-at="1400" data-sfx="whoosh" style="left:128px;top:450px;font-size:58px;font-weight:900;color:var(--orange)">없는 자료를 만들면, 그건 거짓이 됩니다</p>
+  <p class="a pill fx" data-fx="pop" data-at="2100" data-sfx="pop" style="left:128px;top:640px;font-size:36px;background:var(--ivory);color:var(--navy)">과거 보고서</p>
+  <p class="a pill fx" data-fx="pop" data-at="2350" data-sfx="pop" style="left:470px;top:640px;font-size:36px;background:var(--ivory);color:var(--navy)">업무 매뉴얼</p>
+  <p class="a pill fx" data-fx="pop" data-at="2600" data-sfx="pop" style="left:812px;top:640px;font-size:36px;background:var(--ivory);color:var(--navy)">우수 사례</p>
+  <p class="a pill fx" data-fx="pop" data-at="2850" data-sfx="pop" style="left:1118px;top:640px;font-size:36px;background:var(--ivory);color:var(--navy)">자주 묻는 질문</p>
+  <p class="a fx" data-fx="rise" data-at="3300" style="left:128px;top:800px;font-size:44px;font-weight:500;color:var(--mist)">흩어진 기록을 모아 두는 조직일수록 AI의 효과가 커집니다</p>
+  <aside class="note">“AI는 있는 자료를 키우는 건 잘하지만, 없는 자료를 만들어 내면 그건 거짓이 됩니다. 그래서 우리 조직이 가진 과거 보고서, 매뉴얼, 우수 사례, 자주 묻는 질문 같은 기록이 곧 자산입니다.”</aside>
+</section>
+
+<!-- 10 question -->
+<section class="slide light">
+  <p class="a disp fx" data-fx="pop" data-at="200" data-sfx="pop" style="left:128px;top:170px;font-size:76px;background:var(--navy);color:var(--ivory);padding:40px 52px;border-radius:32px">“내부망 쓰는데?”</p>
+  <p class="a disp fx" data-fx="pop" data-at="700" data-sfx="pop" style="left:1000px;top:260px;font-size:76px;background:var(--orange);color:var(--navy);padding:40px 52px;border-radius:32px">“학생 개인정보는?”</p>
+  <h1 class="a disp fx" data-fx="slam" data-at="1500" data-sfx="boom" style="left:128px;top:530px;font-size:108px">그 질문이 바로 리더의 질문입니다</h1>
+  <p class="a fx" data-fx="rise" data-at="2300" style="left:128px;top:730px;font-size:40px;font-weight:500;line-height:1.55;color:var(--slate)">병원이 환자 정보를 외부 AI에 넣지 않듯,<br>우리도 학생·학부모·교직원의 정보를 지켜야 합니다</p>
+  <aside class="note">[6:00~8:00] “‘좋은 건 알겠는데, 우리는 내부망 쓰는데?’, ‘학생 개인정보는 어떡하고?’ 맞습니다. 바로 그 질문이 리더의 질문입니다. 병원이 환자 정보를 외부 AI에 넣을 수 없듯이, 우리도 학생·학부모·교직원의 개인정보를 외부 AI에 함부로 넣어서는 안 됩니다. 개인정보 보호 법령과 기관 보안 규정 위반이 되고, 그 책임은 기관과 결재권자에게 돌아옵니다.”</aside>
+</section>
+
+<!-- 11 rules -->
+<section class="slide dark">
+  <canvas class="amb"></canvas>
+  <h2 class="a disp fx" data-fx="drop" data-at="100" data-sfx="thud" style="left:128px;top:128px;font-size:80px">AI 사용 3원칙</h2>
+  <div class="a fx" data-fx="slam" data-at="600" data-sfx="slam" style="left:128px;top:300px;width:512px;border-top:6px solid var(--orange);padding-top:32px;display:flex;flex-direction:column;gap:16px"><p class="disp" style="font-size:160px;line-height:1;color:var(--orange)">01</p><h3 style="font-size:56px;font-weight:900">넣지 않는다</h3><p style="font-size:32px;line-height:1.5;color:var(--mist)">개인정보·비공개 정보는 승인된 환경이 아니면 입력하지 않습니다</p></div>
+  <div class="a fx" data-fx="slam" data-at="1300" data-sfx="slam" style="left:704px;top:300px;width:512px;border-top:6px solid var(--orange);padding-top:32px;display:flex;flex-direction:column;gap:16px"><p class="disp" style="font-size:160px;line-height:1;color:var(--orange)">02</p><h3 style="font-size:56px;font-weight:900">확인한다</h3><p style="font-size:32px;line-height:1.5;color:var(--mist)">AI 결과는 초안일 뿐, 사실관계와 법령 근거는 사람이 확인합니다</p></div>
+  <div class="a fx" data-fx="slam" data-at="2000" data-sfx="slam" style="left:1280px;top:300px;width:512px;border-top:6px solid var(--orange);padding-top:32px;display:flex;flex-direction:column;gap:16px"><p class="disp" style="font-size:160px;line-height:1;color:var(--orange)">03</p><h3 style="font-size:56px;font-weight:900">책임진다</h3><p style="font-size:32px;line-height:1.5;color:var(--mist)">최종 판단과 결재는 사람이 합니다</p></div>
+  <p class="a fx" data-fx="wipe" data-at="2800" data-sfx="whoosh" style="left:128px;top:850px;font-size:44px;font-weight:700;color:var(--sky)">쓰지 말자가 아니라, 안전하게 쓸 길을 먼저 만들자</p>
+  <aside class="note">“첫째, 넣지 않는다. 개인정보와 비공개 정보는 승인된 환경이 아니면 입력하지 않습니다. 둘째, 확인한다. AI가 만든 결과는 초안일 뿐입니다. 셋째, 책임진다. 최종 판단과 결재는 사람이 합니다. ‘AI를 쓰지 말자’가 아니라, ‘안전하게 쓸 수 있는 길을 우리가 먼저 만들자’는 것입니다.”</aside>
+</section>
+
+<!-- 12 actions -->
+<section class="slide light">
+  <h2 class="a disp fx" data-fx="drop" data-at="100" data-sfx="thud" style="left:128px;top:128px;font-size:80px">돌아가서 바로 하실 세 가지</h2>
+  <div class="a fx" data-fx="left" data-at="600" data-sfx="whoosh" style="left:128px;top:300px;width:1664px;box-sizing:border-box;display:flex;align-items:center;gap:48px;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:36px 48px"><p class="disp" style="font-size:96px;line-height:1;color:var(--orange-dk)">1</p><div><h3 style="font-size:48px;font-weight:900">직접 한 번 써 보십시오</h3><p style="font-size:32px;color:var(--slate)">비공개 정보가 없는 업무 하나를 이번 주에 AI에게 맡겨 보기</p></div></div>
+  <div class="a fx" data-fx="right" data-at="1200" data-sfx="whoosh" style="left:128px;top:510px;width:1664px;box-sizing:border-box;display:flex;align-items:center;gap:48px;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:36px 48px"><p class="disp" style="font-size:96px;line-height:1;color:var(--orange-dk)">2</p><div><h3 style="font-size:48px;font-weight:900">부서마다 작은 과제 하나</h3><p style="font-size:32px;color:var(--slate)">매주 반복되는 취합 업무 하나 줄이기부터</p></div></div>
+  <div class="a fx" data-fx="slam" data-at="1900" data-sfx="slam" style="left:128px;top:720px;width:1664px;box-sizing:border-box;display:flex;align-items:center;gap:48px;background:var(--navy);color:var(--ivory);border-radius:24px;padding:36px 48px"><p class="disp" style="font-size:96px;line-height:1;color:var(--orange)">3</p><div><h3 style="font-size:48px;font-weight:900">우리 부서 자료를 한곳에</h3><p style="font-size:32px;color:var(--mist)">매뉴얼·우수 사례·자주 묻는 질문을 모아 AI가 일할 바탕 만들기</p></div></div>
+  <aside class="note">[8:00~10:00] “첫째, 직접 한 번 써 보십시오. 써 본 리더와 안 써 본 리더는 내리는 지시부터 달라집니다. 둘째, 부서마다 작은 과제 하나씩 정하십시오. 거창한 시스템 도입보다 작은 성공이 조직을 바꿉니다. 셋째, 우리 부서의 자료를 정리하십시오. 그것이 앞으로 AI가 일할 바탕이 됩니다.”</aside>
+</section>
+
+<!-- 13 ending -->
+<section class="slide dark" data-scene="assemble" style="background:var(--deep)">
+  <canvas class="amb"></canvas>
+  <div class="pieces"></div>
+  <h1 class="a disp fx" data-fx="slam" data-at="2700" data-sfx="boom" style="left:288px;top:300px;width:1344px;text-align:center;font-size:124px;line-height:1.15">묻는 AI에서<br><span style="color:var(--orange)">일하는 AI로</span></h1>
+  <p class="a fx" data-fx="rise" data-at="3400" style="left:288px;top:630px;width:1344px;text-align:center;font-size:44px;font-weight:500;color:var(--mist)">그 변화를 현장보다 한발 앞서 이끄는 리더</p>
+  <p class="a fx" data-fx="fade" data-at="3900" data-sfx="chime" style="left:288px;top:750px;width:1344px;text-align:center;font-size:40px;font-weight:700">감사합니다 · 경기도의원 이채명</p>
+  <aside class="note">“버스가 아직 완전히 출발하지는 않았습니다. 하지만 곧 출발합니다. 묻는 AI에서 일하는 AI로. 그 변화를 현장보다 한발 앞서 이끄는 분들이 바로 여기 계신 국장님, 과장님들이시라고 믿습니다. 감사합니다.” 조각 48개가 날아와 카드가 완성된 뒤 문구가 붙습니다.</aside>
+</section>
+
+<div class="curtain l"></div><div class="curtain r"></div>
+<canvas id="fx" width="1920" height="1080"></canvas>
+</div>
+</div>
+
+<button id="start" type="button">▶ 발표 시작 (소리 켜기)</button>
+<div id="notes" hidden><span id="notesText"></span><span id="help">→ / Space / 클릭: 다음 · ←: 이전 · R: 다시 재생 · N: 노트 · M: 효과음 · B: 배경음악 · F: 전체화면</span></div>
+<div id="bar">
+  <button type="button" id="prev" aria-label="이전 장">◀</button>
+  <span id="page">1 / 13</span>
+  <button type="button" id="next" aria-label="다음 장">▶</button>
+  <button type="button" id="replay">다시</button>
+  <button type="button" id="sfxBtn" aria-pressed="true">효과음</button>
+  <button type="button" id="bgmBtn" aria-pressed="false">배경음악</button>
+  <button type="button" id="noteBtn" aria-pressed="false">노트</button>
+  <button type="button" id="fsBtn">전체화면</button>
+</div>
+
+<script>
+(() => {
+const stage = document.getElementById('stage');
+const slides = [...stage.querySelectorAll('.slide')];
+const fxCanvas = document.getElementById('fx'), fxc = fxCanvas.getContext('2d');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let cur = 0, timers = [], started = false, sfxOn = true, bgmOn = false;
+
+/* ---------- fit ---------- */
+function fit(){ const s = Math.min(innerWidth/1920, innerHeight/1080); stage.style.transform = `scale(${s})`; stage.style.margin = `${(1080*s-1080)/2}px ${(1920*s-1920)/2}px`; }
+addEventListener('resize', fit); fit();
+
+/* ---------- audio (synthesized) ---------- */
+let ac = null, master, sfxBus, bgmBus;
+function audio(){
+  if (ac) return ac;
+  try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ return null; }
+  master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination);
+  sfxBus = ac.createGain(); sfxBus.connect(master);
+  bgmBus = ac.createGain(); bgmBus.gain.value = 0; bgmBus.connect(master);
+  return ac;
+}
+function noiseBuf(sec){ const b = ac.createBuffer(1, ac.sampleRate*sec, ac.sampleRate), d = b.getChannelData(0); for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1; return b; }
+let nb = null;
+function noise(t, dur, type, f0, f1, vol, q=1){
+  nb = nb || noiseBuf(2);
+  const src = ac.createBufferSource(); src.buffer = nb;
+  const f = ac.createBiquadFilter(); f.type = type; f.Q.value = q;
+  f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t+dur);
+  const g = ac.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t+dur*.25); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  src.connect(f); f.connect(g); g.connect(sfxBus); src.start(t); src.stop(t+dur+.05);
+}
+function tone(t, dur, type, f0, f1, vol, bus=sfxBus){
+  const o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f0, t); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t+dur);
+  const g = ac.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  o.connect(g); g.connect(bus); o.start(t); o.stop(t+dur+.05);
+}
+const SFX = {
+  whoosh(t){ noise(t,.38,'bandpass',300,3200,.55,1.2); },                 // 샥
+  thud(t){ tone(t,.35,'sine',140,42,.9); noise(t,.08,'lowpass',900,200,.4); }, // 쿵
+  snap(t){ noise(t,.07,'highpass',2500,6000,.5); tone(t,.05,'square',1800,900,.06); }, // 착
+  slam(t){ SFX.thud(t); SFX.snap(t+.01); },                              // 쾅
+  boom(t){ tone(t,.7,'sine',110,30,1); noise(t,.5,'lowpass',2000,120,.7); SFX.snap(t); }, // 쾅(큰)
+  pop(t){ tone(t,.14,'triangle',420,1200,.35); },                        // 뿅
+  tick(t){ tone(t,.035,'square',2400,null,.07); },                       // 틱
+  chime(t){ [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(t+i*.09,1.2,'sine',f,null,.18)); },
+  curtain(t){ noise(t,.8,'bandpass',200,2600,.7,.8); SFX.thud(t+.55); SFX.snap(t+.62); } // 휙+쿵+착
+};
+function sfx(name, delay=0){ if (!sfxOn || !ac || !SFX[name]) return; SFX[name](ac.currentTime + .01 + delay); }
+
+/* BGM: 116 BPM light pulse */
+let bgmTimer = null, nextBeat = 0, beat = 0;
+const BASS = [55, 55, 65.41, 73.42, 55, 55, 82.41, 73.42];
+function scheduleBgm(){
+  const spb = 60/116/2;
+  while (nextBeat < ac.currentTime + .2){
+    const t = nextBeat, step = beat % 16;
+    if (step % 4 === 0) tone(t,.25,'sine',120,45,.5,bgmBus);
+    if (step % 2 === 1){ const s = ac.createBufferSource(); nb = nb || noiseBuf(2); s.buffer = nb; const f = ac.createBiquadFilter(); f.type='highpass'; f.frequency.value=7000; const g = ac.createGain(); g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.0001,t+.05); s.connect(f); f.connect(g); g.connect(bgmBus); s.start(t); s.stop(t+.06); }
+    if (step % 2 === 0) tone(t, spb*.9, 'triangle', BASS[(beat>>1)%8], null, .16, bgmBus);
+    nextBeat += spb; beat++;
+  }
+}
+function setBgm(on){
+  bgmOn = on; document.getElementById('bgmBtn').setAttribute('aria-pressed', on);
+  if (!audio()) return;
+  bgmBus.gain.setTargetAtTime(on ? .35 : 0, ac.currentTime, .3);
+  if (on && !bgmTimer){ nextBeat = ac.currentTime + .1; bgmTimer = setInterval(scheduleBgm, 50); }
+  if (!on && bgmTimer){ setTimeout(()=>{ if(!bgmOn){ clearInterval(bgmTimer); bgmTimer = null; } }, 1200); }
+}
+
+/* ---------- particles / shake ---------- */
+let parts = [], rings = [];
+function stageXY(el){ const r = el.getBoundingClientRect(), s = stage.getBoundingClientRect(), k = s.width/1920; return { x:(r.left - s.left + r.width/2)/k, y:(r.top - s.top + r.height/2)/k, w:r.width/k, h:r.height/k }; }
+function burst(el, big){
+  if (reduce) return;
+  const p = stageXY(el), n = big ? 70 : 36, cols = ['#FF7A2F','#F6F3EC','#7CC4FF','#FFB27A'];
+  for (let i=0;i<n;i++){ const a = Math.random()*Math.PI*2, v = (big?14:9)*(.4+Math.random());
+    parts.push({x:p.x + (Math.random()-.5)*p.w*.8, y:p.y + (Math.random()-.5)*p.h*.6, vx:Math.cos(a)*v, vy:Math.sin(a)*v-3, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.4, s:6+Math.random()*(big?18:12), c:cols[i%4], life:1}); }
+  rings.push({x:p.x, y:p.y, r:20, life:1, max: big ? 900 : 520});
+  // speed lines
+  for (let i=0;i<(big?18:10);i++){ const a = Math.random()*Math.PI*2; parts.push({line:true, x:p.x, y:p.y, a, d:60+Math.random()*80, len:80+Math.random()*120, life:1}); }
+}
+function shake(big){
+  if (reduce) return;
+  const m = big ? 18 : 10;
+  stage.animate([{translate:'0 0'},{translate:`${m}px ${-m/2}px`},{translate:`${-m}px ${m/2}px`},{translate:`${m/2}px ${m/3}px`},{translate:`${-m/3}px 0`},{translate:'0 0'}],{duration:big?420:320, easing:'ease-out'});
+}
+function drawFx(){
+  fxc.clearRect(0,0,1920,1080);
+  rings = rings.filter(r => (r.life -= .035) > 0);
+  rings.forEach(r => { r.r += (r.max - r.r)*.12; fxc.globalAlpha = r.life*.8; fxc.strokeStyle = '#FF7A2F'; fxc.lineWidth = 10*r.life; fxc.beginPath(); fxc.arc(r.x, r.y, r.r, 0, Math.PI*2); fxc.stroke(); });
+  parts = parts.filter(p => (p.life -= p.line ? .05 : .018) > 0);
+  parts.forEach(p => {
+    fxc.globalAlpha = Math.max(0,p.life);
+    if (p.line){ p.d += 38; fxc.strokeStyle = '#F6F3EC'; fxc.lineWidth = 5; fxc.beginPath(); fxc.moveTo(p.x+Math.cos(p.a)*p.d, p.y+Math.sin(p.a)*p.d); fxc.lineTo(p.x+Math.cos(p.a)*(p.d+p.len), p.y+Math.sin(p.a)*(p.d+p.len)); fxc.stroke(); return; }
+    p.x += p.vx; p.y += p.vy; p.vy += .45; p.vx *= .985; p.r += p.vr;
+    fxc.save(); fxc.translate(p.x,p.y); fxc.rotate(p.r); fxc.fillStyle = p.c; fxc.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); fxc.restore();
+  });
+  fxc.globalAlpha = 1;
+}
+
+/* ---------- ambient network on dark slides ---------- */
+const nodes = Array.from({length:46}, () => ({x:Math.random()*1920, y:Math.random()*1080, vx:(Math.random()-.5)*.6, vy:(Math.random()-.5)*.6}));
+let pulses = [];
+function drawAmb(c, t){
+  const g = c.getContext('2d'); g.clearRect(0,0,1920,1080);
+  nodes.forEach(n => { n.x += n.vx; n.y += n.vy; if (n.x<0||n.x>1920) n.vx*=-1; if (n.y<0||n.y>1080) n.vy*=-1; });
+  g.lineWidth = 1.5;
+  for (let i=0;i<nodes.length;i++) for (let j=i+1;j<nodes.length;j++){
+    const a = nodes[i], b = nodes[j], d = Math.hypot(a.x-b.x, a.y-b.y);
+    if (d < 230){ g.strokeStyle = `rgba(124,196,255,${(1-d/230)*.16})`; g.beginPath(); g.moveTo(a.x,a.y); g.lineTo(b.x,b.y); g.stroke(); }
+  }
+  nodes.forEach((n,i) => { g.fillStyle = i%7===0 ? 'rgba(255,122,47,.55)' : 'rgba(201,211,230,.3)'; g.beginPath(); g.arc(n.x,n.y,i%7===0?5:3,0,Math.PI*2); g.fill(); });
+  if (Math.random() < .04){ const a = nodes[Math.random()*nodes.length|0]; const b = nodes.reduce((m,n)=> n!==a && Math.hypot(n.x-a.x,n.y-a.y) < Math.hypot(m.x-a.x,m.y-a.y) ? n : m, nodes[a===nodes[0]?1:0]); pulses.push({a,b,t:0}); }
+  pulses = pulses.filter(p => (p.t += .025) < 1);
+  pulses.forEach(p => { const x = p.a.x+(p.b.x-p.a.x)*p.t, y = p.a.y+(p.b.y-p.a.y)*p.t; g.fillStyle = 'rgba(255,122,47,.9)'; g.beginPath(); g.arc(x,y,5,0,Math.PI*2); g.fill(); });
+}
+
+function loop(t){
+  drawFx();
+  const amb = slides[cur].querySelector('.amb'); if (amb && !reduce) drawAmb(amb, t);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ---------- scenes ---------- */
+function later(fn, ms){ timers.push(setTimeout(fn, reduce ? Math.min(ms, 300) : ms)); }
+function countUp(span){
+  const to = +span.dataset.count, dur = +span.dataset.countDur || 1000, steps = Math.min(to, 30);
+  span.textContent = '0';
+  for (let i=1;i<=steps;i++) later(() => { span.textContent = Math.round(to*i/steps); if (i%2===0 || i===steps) sfx('tick'); }, dur*i/steps);
+}
+const scenes = {
+  cover(s){
+    const L = stage.querySelector('.curtain.l'), R = stage.querySelector('.curtain.r');
+    [L,R].forEach(c => { c.classList.remove('opening'); c.classList.add('closed'); });
+    void L.offsetWidth;
+    later(() => { [L,R].forEach(c => { c.classList.add('opening'); c.classList.remove('closed'); }); sfx('curtain'); }, 350);
+  },
+  rings(s){ later(() => { const h = s.querySelector('h1'); burst(h, true); burst(h, true); }, 1350); },
+  files(s){
+    const box = s.querySelector('.chips'); box.innerHTML = '';
+    const paths = s.querySelectorAll('.draw');
+    paths.forEach(p => { const L = p.getTotalLength(); p.style.transition = 'none'; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+    for (let i=0;i<30;i++){
+      const c = document.createElement('div'); c.className = 'chip';
+      const sx = 160 + Math.random()*520, sy = 470 + Math.random()*260;
+      c.style.left = sx+'px'; c.style.top = sy+'px'; c.style.opacity = 0; c.style.transform = `rotate(${(Math.random()-.5)*50}deg) scale(.6)`;
+      box.appendChild(c);
+      later(() => { c.style.transition = 'opacity .2s, transform .25s'; c.style.opacity = 1; c.style.transform = `rotate(${(Math.random()-.5)*30}deg)`; }, 1100 + i*70);
+      later(() => { c.style.transition = 'transform .7s cubic-bezier(.6,0,.3,1), opacity .7s'; c.style.transform = `translate(${1480-sx}px, ${600-sy}px) rotate(${360+Math.random()*180}deg) scale(.2)`; c.style.opacity = 0; if (i%5===0) sfx('whoosh'); }, 2700 + i*25);
+    }
+    later(() => paths.forEach(p => { p.style.transition = 'stroke-dashoffset .8s cubic-bezier(.6,0,.2,1)'; p.style.strokeDashoffset = 0; }), 2700);
+  },
+  assemble(s){
+    const box = s.querySelector('.pieces'); box.innerHTML = '';
+    const X = 288, Y = 200, W = 1344, H = 680, C = 8, Rr = 6, pw = W/C, ph = H/Rr;
+    for (let r=0;r<Rr;r++) for (let c=0;c<C;c++){
+      const p = document.createElement('div'); p.className = 'piece';
+      const k = r*C + c;
+      p.style.cssText = `left:${X+c*pw}px;top:${Y+r*ph}px;width:${pw+1}px;height:${ph+1}px;background:${(r+c)%2 ? '#1B2B4D' : '#22365F'};opacity:0;transform:translate(${(Math.random()-.5)*2600}px,${(Math.random()-.5)*1600}px) rotate(${(Math.random()-.5)*540}deg) scale(.4)`;
+      if (k===0||k===7||k===40||k===47) p.style.background = '#FF7A2F';
+      box.appendChild(p);
+      later(() => { p.style.opacity = 1; p.style.transform = 'none'; if (k%3===0) sfx('snap'); }, 300 + k*40);
+    }
+    later(() => { sfx('thud'); shake(false); }, 300 + 48*40 + 400);
+  }
+};
+
+/* ---------- play / navigate ---------- */
+function clear(){ timers.forEach(clearTimeout); timers = []; }
+function prime(s){ s.querySelectorAll('.fx').forEach(e => { e.className = e.className.replace(/\bgo-\w+/g,'').trim(); e.classList.add('pre'); }); }
+function play(i){
+  clear();
+  const s = slides[i];
+  prime(s);
+  if (s.dataset.scene && scenes[s.dataset.scene]) scenes[s.dataset.scene](s);
+  s.querySelectorAll('.fx').forEach(e => {
+    later(() => {
+      e.classList.remove('pre'); void e.offsetWidth; e.classList.add('go-' + e.dataset.fx);
+      if (e.dataset.sfx) sfx(e.dataset.sfx);
+      const big = e.dataset.sfx === 'boom';
+      if (e.dataset.fx === 'slam') later(() => { shake(big); burst(e, big); }, 250);
+      e.querySelectorAll('[data-count]').forEach(countUp);
+    }, +e.dataset.at || 0);
+  });
+}
+function show(i, dir){
+  const prev = slides[cur], next = slides[i];
+  if (i === cur){ play(i); return; }
+  next.classList.add('on');
+  if (!reduce && dir){
+    next.style.transition = 'none'; next.style.transform = `translateX(${dir*100}%)`;
+    prev.style.transition = 'none'; prev.style.transform = 'translateX(0)';
+    void next.offsetWidth;
+    const ease = 'transform .55s cubic-bezier(.75,0,.2,1)';
+    next.style.transition = ease; prev.style.transition = ease;
+    next.style.transform = 'translateX(0)'; prev.style.transform = `translateX(${-dir*100}%)`;
+    sfx('whoosh');
+    setTimeout(() => { if (slides[cur] !== prev) prev.classList.remove('on'); }, 600);
+  } else { prev.classList.remove('on'); next.style.transform = 'none'; }
+  cur = i; updateUi();
+  setTimeout(() => play(i), reduce ? 0 : 380);
+}
+function go(d){ const n = Math.max(0, Math.min(slides.length-1, cur+d)); if (n !== cur) show(n, d > 0 ? 1 : -1); }
+function updateUi(){
+  document.getElementById('page').textContent = `${cur+1} / ${slides.length}`;
+  const note = slides[cur].querySelector('aside.note'); document.getElementById('notesText').textContent = note ? note.textContent : '';
+}
+function start(){
+  if (started) return; started = true;
+  const a = audio(); if (a && a.state === 'suspended') a.resume();
+  document.getElementById('start').hidden = true;
+  play(0);
+}
+
+slides[0].classList.add('on'); slides[0].style.transform = 'none'; updateUi();
+
+/* ---------- controls ---------- */
+const $ = id => document.getElementById(id);
+$('start').addEventListener('click', start);
+stage.addEventListener('click', () => started ? go(1) : start());
+$('prev').addEventListener('click', () => go(-1));
+$('next').addEventListener('click', () => started ? go(1) : start());
+$('replay').addEventListener('click', () => { if (!started) return start(); play(cur); });
+$('sfxBtn').addEventListener('click', e => { audio(); sfxOn = !sfxOn; e.currentTarget.setAttribute('aria-pressed', sfxOn); });
+$('bgmBtn').addEventListener('click', () => { const a = audio(); if (a && a.state==='suspended') a.resume(); setBgm(!bgmOn); });
+$('noteBtn').addEventListener('click', toggleNotes);
+$('fsBtn').addEventListener('click', toggleFs);
+function toggleNotes(){ const n = $('notes'); n.hidden = !n.hidden; $('noteBtn').setAttribute('aria-pressed', !n.hidden); }
+function toggleFs(){ try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(()=>{}); } catch(e){} }
+addEventListener('keydown', e => {
+  const k = e.key;
+  if (['ArrowRight','PageDown',' ','Enter'].includes(k)){ e.preventDefault(); started ? go(1) : start(); }
+  else if (['ArrowLeft','PageUp','Backspace'].includes(k)){ e.preventDefault(); go(-1); }
+  else if (k==='r'||k==='R'){ started ? play(cur) : start(); }
+  else if (k==='n'||k==='N') toggleNotes();
+  else if (k==='m'||k==='M') $('sfxBtn').click();
+  else if (k==='b'||k==='B') $('bgmBtn').click();
+  else if (k==='f'||k==='F') toggleFs();
+  else if (k==='Home'){ show(0,-1); } else if (k==='End'){ show(slides.length-1,1); }
+});
+})();
+</script>
