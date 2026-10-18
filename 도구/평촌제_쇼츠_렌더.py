@@ -4,6 +4,7 @@
 사진폴더에는 블로그 원본 사진(파일명 앞 8자리 ID)이 있어야 합니다.
 """
 import math
+import os
 import random
 import subprocess
 import sys
@@ -542,6 +543,7 @@ def make_audio(path):
         if i < n:
             pad[i:j] += s[: j - i]
     mix += sosfilt(butter(2, 1800, "lp", fs=SR, output="sos"), pad) * 0.045
+    mix *= float(os.environ.get("MUSIC", "1"))  # MUSIC=0 이면 효과음만 (앱에서 음악을 따로 넣을 때)
 
     # 효과음
     def whoosh(length=0.45):
@@ -597,6 +599,8 @@ def make_audio(path):
 if __name__ == "__main__":
     wav = OUT.rsplit(".", 1)[0] + "_audio.wav"
     make_audio(wav)
+    if os.environ.get("AUDIO_ONLY"):
+        sys.exit()
     nframes = int(TOTAL * FPS)
     if len(sys.argv) > 4:  # 미리보기: 지정 시각 프레임만 PNG로 저장
         for s in sys.argv[4].split(","):
